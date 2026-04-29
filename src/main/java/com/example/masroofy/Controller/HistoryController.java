@@ -4,5 +4,5 @@ import com.example.masroofy.Model.*;
 import com.example.masroofy.View.*;
 public class HistoryController implements AbstractController {
     @Override
-    public void PrintView(AbstractView view) {}
+    public void PrintView() {}
 }
