@@ -8,7 +8,8 @@ module com.example.masroofy {
     requires java.sql;
 
     opens com.example.masroofy to javafx.fxml;
-
     opens com.example.masroofy.View to javafx.fxml;
+
     exports com.example.masroofy;
+    exports com.example.masroofy.View;
 }

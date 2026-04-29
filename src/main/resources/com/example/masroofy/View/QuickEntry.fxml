@@ -14,23 +14,32 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="650.0" prefWidth="400.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="650.0" prefWidth="400.0" style="-fx-background-color: #0f172a;"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.masroofy.View.QuickEntryView">
     <children>
         <Circle fill="#10b981" layoutX="350.0" layoutY="60.0" radius="80.0" style="-fx-opacity: 0.1;" />
         <Circle fill="#38bdf8" layoutX="50.0" layoutY="600.0" radius="100.0" style="-fx-opacity: 0.05;" />
 
         <VBox layoutX="25.0" layoutY="30.0" prefWidth="350.0" spacing="20.0">
             <children>
+
+                <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;" text="←" />
+                        <Button onAction="#onBackClicked"
+                                style="-fx-background-color: transparent; -fx-text-fill: white;
+                                       -fx-font-size: 18; -fx-cursor: hand;" text="←" />
                         <Label style="-fx-text-fill: #ffffff; -fx-opacity: 1.0;" text="Quick Entry">
                             <font><Font name="System Bold" size="20.0" /></font>
                         </Label>
                     </children>
                 </HBox>
 
-                <VBox spacing="8.0" style="-fx-background-color: rgba(255, 255, 255, 0.04); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-radius: 20; -fx-padding: 20;">
+                <!-- Amount Input -->
+                <VBox spacing="8.0"
+                      style="-fx-background-color: rgba(255, 255, 255, 0.04); -fx-background-radius: 20;
+                             -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-radius: 20; -fx-padding: 20;">
                     <children>
                         <Label style="-fx-text-fill: #ffffff; -fx-opacity: 1.0;" text="AMOUNT">
                             <font><Font name="System Bold" size="11.0" /></font>
@@ -40,71 +49,113 @@
                                 <Label style="-fx-text-fill: #ffffff; -fx-opacity: 1.0;" text="EGP">
                                     <font><Font name="System Bold" size="24.0" /></font>
                                 </Label>
-                                <TextField fx:id="etAmountInput" promptText="0.00" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-font-size: 32; -fx-font-weight: bold; -fx-padding: 0;" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="etAmountInput" promptText="0.00"
+                                           style="-fx-background-color: transparent; -fx-text-fill: white;
+                                                  -fx-prompt-text-fill: #64748b; -fx-font-size: 32;
+                                                  -fx-font-weight: bold; -fx-padding: 0;"
+                                           HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
 
+                <!-- Category Selection -->
                 <VBox spacing="12.0" VBox.vgrow="ALWAYS">
                     <children>
                         <HBox alignment="CENTER_LEFT">
                             <children>
-                                <Label style="-fx-text-fill: #ffffff; -fx-opacity: 1.0;" text="SELECT CATEGORY" HBox.hgrow="ALWAYS">
+                                <Label style="-fx-text-fill: #ffffff; -fx-opacity: 1.0;"
+                                       text="SELECT CATEGORY" HBox.hgrow="ALWAYS">
                                     <font><Font name="System Bold" size="11.0" /></font>
                                 </Label>
                             </children>
                         </HBox>
 
-                        <ScrollPane fitToWidth="true" prefHeight="220.0" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+                        <ScrollPane fitToWidth="true" prefHeight="220.0"
+                                    style="-fx-background-color: transparent; -fx-background: transparent;
+                                           -fx-border-color: transparent;">
                             <content>
-                                <GridPane hgap="10.0" style="-fx-background-color: transparent;" vgap="10.0">
+                                <GridPane fx:id="categoryGrid" hgap="10.0"
+                                          style="-fx-background-color: transparent;" vgap="10.0">
                                     <columnConstraints>
                                         <ColumnConstraints percentWidth="33.3" />
                                         <ColumnConstraints percentWidth="33.3" />
                                         <ColumnConstraints percentWidth="33.3" />
                                     </columnConstraints>
                                     <children>
-                                        <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: #10b981; -fx-background-radius: 18; -fx-padding: 15;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <VBox alignment="CENTER" spacing="8.0"
+                                              onMouseClicked="#onFoodClicked"
+                                              style="-fx-background-color: #10b981; -fx-background-radius: 18;
+                                                     -fx-padding: 15; -fx-cursor: hand;"
+                                              GridPane.columnIndex="0" GridPane.rowIndex="0">
                                             <children>
                                                 <Label style="-fx-font-size: 26;" text="🍔" />
-                                                <Label style="-fx-font-weight: bold; -fx-font-size: 11;" text="Food" textFill="#0f172a" />
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 11;"
+                                                       text="Food" textFill="#0f172a" />
                                             </children>
                                         </VBox>
-                                        <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 18; -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-radius: 18; -fx-padding: 15;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <VBox alignment="CENTER" spacing="8.0"
+                                              onMouseClicked="#onTransportClicked"
+                                              style="-fx-background-color: rgba(255, 255, 255, 0.05);
+                                                     -fx-background-radius: 18;
+                                                     -fx-border-color: rgba(255, 255, 255, 0.1);
+                                                     -fx-border-radius: 18; -fx-padding: 15; -fx-cursor: hand;"
+                                              GridPane.columnIndex="1" GridPane.rowIndex="0">
                                             <children>
                                                 <Label style="-fx-font-size: 26;" text="🚗" />
-                                                <Label style="-fx-font-size: 11;" text="Transport" textFill="WHITE" />
+                                                <Label style="-fx-font-size: 11;" text="Transport"
+                                                       textFill="WHITE" />
                                             </children>
                                         </VBox>
-                                        <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 18; -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-radius: 18; -fx-padding: 15;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                        <VBox alignment="CENTER" spacing="8.0"
+                                              onMouseClicked="#onGiftsClicked"
+                                              style="-fx-background-color: rgba(255, 255, 255, 0.05);
+                                                     -fx-background-radius: 18;
+                                                     -fx-border-color: rgba(255, 255, 255, 0.1);
+                                                     -fx-border-radius: 18; -fx-padding: 15; -fx-cursor: hand;"
+                                              GridPane.columnIndex="2" GridPane.rowIndex="0">
                                             <children>
                                                 <Label style="-fx-font-size: 26;" text="🎁" />
-                                                <Label style="-fx-font-size: 11;" text="Gifts" textFill="WHITE" />
+                                                <Label style="-fx-font-size: 11;" text="Gifts"
+                                                       textFill="WHITE" />
                                             </children>
                                         </VBox>
                                     </children>
-                           <rowConstraints>
-                              <RowConstraints />
-                           </rowConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                    </rowConstraints>
                                 </GridPane>
                             </content>
                         </ScrollPane>
                     </children>
                 </VBox>
 
+                <!-- New Category -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <TextField promptText="New Category..." style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 10; -fx-text-fill: white; -fx-padding: 10;" HBox.hgrow="ALWAYS" />
-                        <Button style="-fx-background-color: transparent; -fx-border-color: #10b981; -fx-border-radius: 10; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-min-width: 45; -fx-min-height: 40;" text="+" />
+                        <TextField fx:id="newCategoryField" promptText="New Category..."
+                                   style="-fx-background-color: rgba(255,255,255,0.06);
+                                          -fx-background-radius: 10; -fx-text-fill: white;
+                                          -fx-padding: 10;"
+                                   HBox.hgrow="ALWAYS" />
+                        <Button onAction="#onAddCategoryClicked"
+                                style="-fx-background-color: transparent; -fx-border-color: #10b981;
+                                       -fx-border-radius: 10; -fx-text-fill: #10b981; -fx-font-weight: bold;
+                                       -fx-min-width: 45; -fx-min-height: 40;" text="+" />
                     </children>
                 </HBox>
 
-                <Button fx:id="btnSubmitExpense" maxWidth="Infinity" prefHeight="55.0" style="-fx-background-color: #10b981; -fx-background-radius: 15; -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-font-size: 15; -fx-cursor: hand;" text="CONFIRM EXPENSE">
+                <!-- Submit Button -->
+                <Button fx:id="btnSubmitExpense" maxWidth="Infinity" prefHeight="55.0"
+                        onAction="#onSubmitExpense"
+                        style="-fx-background-color: #10b981; -fx-background-radius: 15;
+                               -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-font-size: 15;
+                               -fx-cursor: hand;" text="CONFIRM EXPENSE">
                     <effect>
                         <DropShadow color="#10b98144" radius="15" />
                     </effect>
                 </Button>
+
             </children>
         </VBox>
     </children>
