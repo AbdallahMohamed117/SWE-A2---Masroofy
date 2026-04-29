@@ -25,7 +25,10 @@ public class DashboardView implements AbstractView, Initializable {
     }
 
     @Override
-    public void printScreen() {}
+    public void printScreen() {
+        showSafeDailyLimit(dailyLimit);
+        showPieChart(categoryData);
+    }
 
     public void showSafeDailyLimit(double limit) {
         this.dailyLimit = limit;
