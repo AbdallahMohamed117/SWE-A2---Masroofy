@@ -13,7 +13,11 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="380.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="700.0" prefWidth="380.0"
+            style="-fx-background-color: #0f172a;"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.masroofy.View.DashboardView">
     <children>
         <Circle fill="#10b981" layoutX="330.0" layoutY="40.0" radius="80.0" style="-fx-opacity: 0.08;" />
         <Circle fill="#38bdf8" layoutX="50.0" layoutY="650.0" radius="60.0" style="-fx-opacity: 0.04;" />
@@ -41,7 +45,7 @@
                                 <Insets bottom="6.0" left="12.0" right="12.0" top="6.0" />
                             </padding>
                             <children>
-                                <Label text="12 days left" textFill="#10b981">
+                                <Label fx:id="lblDaysLeft" text="12 days left" textFill="#10b981">
                                     <font><Font name="System Bold" size="10.0" /></font>
                                 </Label>
                             </children>
@@ -77,20 +81,20 @@
                                                         </Label>
                                                     </children>
                                                 </VBox>
-                                                <Label style="-fx-font-size: 24;" text="✅" />
+                                                <Label fx:id="lblStatusIcon" style="-fx-font-size: 24;" text="✅" />
                                             </children>
                                         </HBox>
                                         <VBox spacing="6.0">
                                             <children>
-                                                <ProgressBar maxWidth="Infinity" prefHeight="6.0" progress="0.45" style="-fx-accent: #10b981;" />
+                                                <ProgressBar fx:id="progressBar" maxWidth="Infinity" prefHeight="6.0" progress="0.45" style="-fx-accent: #10b981;" />
                                                 <HBox>
                                                     <children>
-                                                        <Label text="Spent: EGP 30.00" textFill="#94a3b8">
+                                                        <Label fx:id="lblSpent" text="Spent: EGP 30.00" textFill="#94a3b8">
                                                             <font><Font size="10.0" /></font>
                                                         </Label>
                                                         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <Label text="Limit: EGP 66.67" textFill="#94a3b8">
+                                                                <Label fx:id="lblLimit" text="Limit: EGP 66.67" textFill="#94a3b8">
                                                                     <font><Font size="10.0" /></font>
                                                                 </Label>
                                                             </children>
@@ -121,7 +125,7 @@
                                                         <Label text="Total" textFill="#94a3b8">
                                                             <font><Font size="10.0" /></font>
                                                         </Label>
-                                                        <Label text="1,887.34" textFill="WHITE">
+                                                        <Label fx:id="lblTotalSpent" text="1,887.34" textFill="WHITE">
                                                             <font><Font name="System Bold" size="15.0" /></font>
                                                         </Label>
                                                         <Label text="EGP" textFill="#94a3b8">
@@ -132,7 +136,7 @@
                                             </children>
                                         </StackPane>
 
-                                        <VBox spacing="8.0">
+                                        <VBox fx:id="categoryContainer" spacing="8.0">
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" prefHeight="40.0" style="-fx-background-color: rgba(255,255,255,0.02); -fx-background-radius: 12; -fx-padding: 0 12 0 12;">
                                                     <children>
@@ -179,10 +183,18 @@
 
                                 <VBox spacing="10.0">
                                     <children>
-                                        <Button fx:id="btnLogExpense" maxWidth="Infinity" prefHeight="50.0" style="-fx-background-color: #10b981; -fx-background-radius: 12; -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-cursor: hand;" text="+ LOG EXPENSE">
+                                        <Button fx:id="btnLogExpense"
+                                                onAction="#onLogExpenseClicked"
+                                                maxWidth="Infinity" prefHeight="50.0"
+                                                style="-fx-background-color: #10b981; -fx-background-radius: 12; -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-cursor: hand;"
+                                                text="+ LOG EXPENSE">
                                             <effect><DropShadow color="#10b98133" radius="8" /></effect>
                                         </Button>
-                                        <Button fx:id="btnHistory" maxWidth="Infinity" prefHeight="50.0" style="-fx-background-color: transparent; -fx-border-color: #10b981; -fx-border-radius: 12; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-cursor: hand;" text="HISTORY" />
+                                        <Button fx:id="btnHistory"
+                                                onAction="#onHistoryClicked"
+                                                maxWidth="Infinity" prefHeight="50.0"
+                                                style="-fx-background-color: transparent; -fx-border-color: #10b981; -fx-border-radius: 12; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-cursor: hand;"
+                                                text="HISTORY" />
                                     </children>
                                 </VBox>
 
