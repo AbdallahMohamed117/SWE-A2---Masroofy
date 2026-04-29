@@ -10,7 +10,7 @@ public class BudgetApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/masroofy/hello-view.fxml")
+                getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml")
         );
         Scene scene = new Scene(loader.load(), 400, 650);
         primaryStage.setTitle("Masroofy");
