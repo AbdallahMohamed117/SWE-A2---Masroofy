@@ -7,4 +7,7 @@ public class DashboardController implements AbstractController {
     public void PrintView(AbstractView view) {}
 
     public void refreshDashboard() {}
+
+    private Dashboard model;
+    private DashboardView view;
 }

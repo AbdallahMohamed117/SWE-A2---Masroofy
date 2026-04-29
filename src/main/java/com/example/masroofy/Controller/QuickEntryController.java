@@ -9,10 +9,10 @@ public class QuickEntryController implements AbstractController {
     public void PrintView(AbstractView view) {}
 
     public boolean validateAddTransaction(int transactionAmount, Category category) {
-        return false;
+        return true;
     }
 
     public boolean validateAddCategory(String categoryName) {
-        return false;
+        return true;
     }
 }
