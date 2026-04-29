@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class SetupController implements AbstractController {
     @Override
-    public void PrintView(AbstractView view) {}
+    public void PrintView() {}
 
     public void validateSetup(int allowanceAmount, Date startDate, Date endDate) {}
 }

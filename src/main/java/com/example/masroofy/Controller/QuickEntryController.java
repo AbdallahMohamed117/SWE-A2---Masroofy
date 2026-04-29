@@ -6,13 +6,13 @@ import com.example.masroofy.View.*;
 
 public class QuickEntryController implements AbstractController {
     @Override
-    public void PrintView(AbstractView view) {}
+    public void PrintView() {}
 
     public boolean validateAddTransaction(int transactionAmount, Category category) {
-        return false;
+        return true;
     }
 
     public boolean validateAddCategory(String categoryName) {
-        return false;
+        return true;
     }
 }
