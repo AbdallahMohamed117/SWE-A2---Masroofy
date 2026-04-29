@@ -26,18 +26,24 @@ public class DashboardView implements AbstractView, Initializable {
 
     @Override
     public void printScreen() {
-        showSafeDailyLimit(dailyLimit);
-        showPieChart(categoryData);
+        showSafeDailyLimit();
+        showPieChart();
     }
 
-    public void showSafeDailyLimit(double limit) {
-        this.dailyLimit = limit;
-        tvDailyLimit.setText("EGP " + String.format("%.2f", limit));
+    public void showSafeDailyLimit() {
+        tvDailyLimit.setText("EGP " + String.format("%.2f", dailyLimit));
     }
 
-    public void showPieChart(Map<String, Double> data) {
-        this.categoryData = data;
+    public void setDailyLimit(double limit) {
+        dailyLimit = limit;
+    }
+
+    public void showPieChart() {
         // TODO: update chart with real data
+    }
+
+    public void setPieChart(Map<String, Double> data) {
+        categoryData = data;
     }
 
     public void showAlert(String message) {

@@ -9,8 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 public class DashboardController implements AbstractController {
+
+    public DashboardController(DashboardView v, Dashboard m) {
+        view = v;
+        model = m;
+    }
     @Override
-    public void PrintView(AbstractView view) {}
+    public void PrintView() {
+        view.printScreen();
+    }
 
     public void refreshDashboard() {
         double limit = model.getDailyLimit();
@@ -24,6 +31,11 @@ public class DashboardController implements AbstractController {
 
             piechart.put(categoryName,percentage);
         }
+
+        view.setDailyLimit(limit);
+        view.setPieChart(piechart);
+
+        PrintView();
     }
 
     private Dashboard model;
