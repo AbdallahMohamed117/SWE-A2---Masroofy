@@ -3,7 +3,9 @@ package com.example.masroofy.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import java.util.List;
 
 public class QuickEntryView implements AbstractView {
@@ -14,14 +16,21 @@ public class QuickEntryView implements AbstractView {
     @FXML private TextField newCategoryField;
 
     private String selectedCategory = null;
+    private VBox currentlySelectedTile = null;
 
     @Override
-    public void printScreen() {}
-
-
-
-    public void showCategories(List<String> categories) {
+    public void printScreen() {
+        etAmountInput.clear();
+        newCategoryField.clear();
+        selectedCategory = null;
+        currentlySelectedTile = null;
+        categoryGrid.getChildren().clear();
     }
+
+    public String getAmountText()        { return etAmountInput.getText(); }
+    public String getSelectedCategory()  { return selectedCategory; }
+    public String getNewCategoryText()   { return newCategoryField.getText(); }
+    public void   clearNewCategory()     { newCategoryField.clear(); }
 
     public void showErrorMessage(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -39,68 +48,69 @@ public class QuickEntryView implements AbstractView {
         alert.showAndWait();
     }
 
-    public void onExpenseSubmitted(double amount, String category) {
-        // TODO: QuickEntryController يتعامل مع الـ logic
+    public void showCategories(List<String> categories) {
+        categoryGrid.getChildren().clear();
+        int col = 0, row = 0;
+        for (String cat : categories) {
+            VBox tile = buildCategoryTile(cat);
+            categoryGrid.add(tile, col, row);
+            col++;
+            if (col == 3) {
+                col = 0;
+                row++;
+            }
+        }
     }
 
 
+    private VBox buildCategoryTile(String categoryName) {
+        VBox tile = new VBox(8);
+        tile.setAlignment(Pos.CENTER);
+        tile.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+
+        Label label = new Label(categoryName);
+        label.setFont(Font.font("System", 14));
+        label.setWrapText(true);
+        label.setAlignment(Pos.CENTER);
+
+        tile.getChildren().add(label);
+
+        tile.setOnMouseClicked(e -> {
+            selectCategory(categoryName, tile);
+        });
+
+        return tile;
+    }
+
+
+    private void selectCategory(String categoryName, VBox tile) {
+        if (currentlySelectedTile != null) {
+            currentlySelectedTile.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+        }
+
+        tile.setStyle("-fx-background-color: #3b82f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+        ((Label) tile.getChildren().get(0)).setTextFill(Color.WHITE);
+
+        selectedCategory = categoryName;
+        currentlySelectedTile = tile;
+    }
+
+    public void onExpenseSubmitted(String amountText, String category) {}
+
     @FXML
     private void onBackClicked() {
+        // TODO: navigate back
     }
 
     @FXML
     private void onSubmitExpense() {
-        String amountText = etAmountInput.getText();
-
-        if (amountText == null || amountText.isEmpty()) {
-            showErrorMessage("Please enter a valid number.");
-            return;
-        }
-
-        double amount;
-        try {
-            amount = Double.parseDouble(amountText);
-        } catch (NumberFormatException e) {
-            showErrorMessage("Please enter a valid number.");
-            return;
-        }
-
-        if (amount <= 0) {
-            showErrorMessage("Amount must be greater than zero.");
-            return;
-        }
-
-        if (selectedCategory == null) {
-            showErrorMessage("Please select a category.");
-            return;
-        }
-
-        onExpenseSubmitted(amount, selectedCategory);
+        onExpenseSubmitted(getAmountText(), getSelectedCategory());
     }
 
     @FXML
     private void onAddCategoryClicked() {
-        if (newCategoryField == null) return;
-        String newCategory = newCategoryField.getText();
-        if (newCategory == null || newCategory.isEmpty()) {
-            showErrorMessage("Please enter a category name.");
-            return;
-        }
-        newCategoryField.clear();
+        onCategoryAdded(getNewCategoryText());
     }
 
-    @FXML
-    private void onFoodClicked() {
-        selectedCategory = "Food";
-    }
-
-    @FXML
-    private void onTransportClicked() {
-        selectedCategory = "Transport";
-    }
-
-    @FXML
-    private void onGiftsClicked() {
-        selectedCategory = "Gifts";
-    }
+    public void onCategoryAdded(String categoryName) {}
 }
