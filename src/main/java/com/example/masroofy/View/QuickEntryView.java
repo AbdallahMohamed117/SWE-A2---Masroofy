@@ -24,13 +24,13 @@ public class QuickEntryView implements AbstractView {
         newCategoryField.clear();
         selectedCategory = null;
         currentlySelectedTile = null;
-        categoryGrid.getChildren().clear();
+        if (categoryGrid != null) categoryGrid.getChildren().clear();
     }
 
     public String getAmountText()        { return etAmountInput.getText(); }
     public String getSelectedCategory()  { return selectedCategory; }
     public String getNewCategoryText()   { return newCategoryField.getText(); }
-    public void   clearNewCategory()     { newCategoryField.clear(); }
+    public void   clearNewCategory()     { if (newCategoryField != null) newCategoryField.clear(); }
 
     public void showErrorMessage(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -49,6 +49,7 @@ public class QuickEntryView implements AbstractView {
     }
 
     public void showCategories(List<String> categories) {
+        if (categoryGrid == null) return;
         categoryGrid.getChildren().clear();
         int col = 0, row = 0;
         for (String cat : categories) {
@@ -62,7 +63,6 @@ public class QuickEntryView implements AbstractView {
         }
     }
 
-
     private VBox buildCategoryTile(String categoryName) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
@@ -75,17 +75,14 @@ public class QuickEntryView implements AbstractView {
 
         tile.getChildren().add(label);
 
-        tile.setOnMouseClicked(e -> {
-            selectCategory(categoryName, tile);
-        });
-
+        tile.setOnMouseClicked(e -> selectCategory(categoryName, tile));
         return tile;
     }
-
 
     private void selectCategory(String categoryName, VBox tile) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+            ((Label) currentlySelectedTile.getChildren().get(0)).setTextFill(Color.BLACK);
         }
 
         tile.setStyle("-fx-background-color: #3b82f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
@@ -95,22 +92,16 @@ public class QuickEntryView implements AbstractView {
         currentlySelectedTile = tile;
     }
 
-    public void onExpenseSubmitted(String amountText, String category) {}
+    @FXML private void onBackClicked() { }
 
-    @FXML
-    private void onBackClicked() {
-        // TODO: navigate back
-    }
-
-    @FXML
-    private void onSubmitExpense() {
+    @FXML private void onSubmitExpense() {
         onExpenseSubmitted(getAmountText(), getSelectedCategory());
     }
 
-    @FXML
-    private void onAddCategoryClicked() {
+    @FXML private void onAddCategoryClicked() {
         onCategoryAdded(getNewCategoryText());
     }
 
-    public void onCategoryAdded(String categoryName) {}
+    public void onExpenseSubmitted(String amountText, String category) { }
+    public void onCategoryAdded(String categoryName) { }
 }
