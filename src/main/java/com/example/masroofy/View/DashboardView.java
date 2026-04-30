@@ -79,13 +79,6 @@ public class DashboardView implements AbstractView, Initializable {
         tvDailyLimit.setText("No Data");
     }
 
-    @FXML
-    public void onLogExpenseClicked() {
-        // TODO: navigate to QuickEntryView
-    }
-
-    @FXML
-    public void onHistoryClicked() {
-        // TODO: navigate to HistoryView
-    }
+    @FXML public void onLogExpenseClicked() { }
+    @FXML public void onHistoryClicked() { }
 }
