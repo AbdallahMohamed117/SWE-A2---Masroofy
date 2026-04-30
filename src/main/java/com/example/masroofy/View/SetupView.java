@@ -32,6 +32,5 @@ public class SetupView implements AbstractView {
         onSetupSubmitted(getAmountText(), getStartDateText(), getEndDateText());
     }
 
-    // الدالة اللي الـ Controller هيستدعيها
     public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }
