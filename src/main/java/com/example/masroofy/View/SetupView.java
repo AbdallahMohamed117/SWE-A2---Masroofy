@@ -32,6 +32,5 @@ public class SetupView implements AbstractView {
         onSetupSubmitted(getAmountText(), getStartDateText(), getEndDateText());
     }
 
-    public void onSetupSubmitted(String amountText, String startText, String endText) {
-    }
+    public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }
