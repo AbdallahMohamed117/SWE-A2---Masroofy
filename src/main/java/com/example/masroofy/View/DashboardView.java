@@ -28,6 +28,7 @@ public class DashboardView implements AbstractView, Initializable {
     public void printScreen() {
         showSafeDailyLimit();
         showPieChart();
+        showCategoryInsights();
     }
 
     public void showSafeDailyLimit() {
@@ -44,6 +45,18 @@ public class DashboardView implements AbstractView, Initializable {
 
     public void setPieChart(Map<String, Double> data) {
         categoryData = data;
+    }
+
+
+    public void showCategoryInsights() {
+        if (categoryData == null || categoryData.isEmpty()) {
+            System.out.println("No category data to show");
+            return;
+        }
+
+        categoryData.forEach((category, amount) -> {
+            System.out.println(category + ": EGP " + String.format("%.2f", amount));
+        });
     }
 
     public void showAlert(String message) {
