@@ -1,8 +1,11 @@
 package com.example.masroofy.Controller;
 
 import com.example.masroofy.Model.*;
+import com.example.masroofy.Model.Entity.Budget;
 import com.example.masroofy.View.*;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import com.example.masroofy.Listener.SetupListener;
 public class SetupController implements AbstractController, SetupListener {
     private Setup model;
@@ -20,8 +23,25 @@ public class SetupController implements AbstractController, SetupListener {
     }
 
     @Override
-    public void onSetupSumbitted(double allowance, Date startDate, Date endDate) {
+    public boolean onSetupSumbitted(double allowance, Date startDate, Date endDate) {
+        boolean pass = true;
+        if(allowance < 0) {
+            view.showErrorMessage("Invalid Allowance Amount");
+            pass = false;
+        }
+        if(startDate.after(endDate)) {
+            view.showErrorMessage("Start Date Can't Be Less Than End Date");
+            pass = false;
+        }
+        if(pass) {
+            Budget b = new Budget();
+            b.setAllowance(allowance);
+            b.setStartDate(startDate);
+            b.setEndDate(endDate);
+            b.setDailysafeLimit();
 
+            model.setCycle(b);
+        }
+        return pass;
     }
-    public void validateSetup(int allowanceAmount, Date startDate, Date endDate) {}
 }

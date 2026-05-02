@@ -1,5 +1,8 @@
 package com.example.masroofy;
 
+import com.example.masroofy.Controller.SetupController;
+import com.example.masroofy.Model.Setup;
+import com.example.masroofy.View.SetupView;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

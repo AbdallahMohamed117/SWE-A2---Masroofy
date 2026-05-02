@@ -32,12 +32,12 @@ public class SetupView implements AbstractView {
         eventListener = sl;
     }
     public String getAmountText()    { return etAllowanceAmount.getText(); }
-    public Date getStartDateText() {
+    public Date getStartDate() {
         LocalDate lc = etStartDate.getValue();
         Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
         return date;
     }
-    public Date getEndDateText()   {
+    public Date getEndDate()   {
         LocalDate lc = etEndDate.getValue();
         Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
         return date;
@@ -46,8 +46,11 @@ public class SetupView implements AbstractView {
     @FXML
     public void onStartCycleClicked() {
 
+        double all = Double.parseDouble(getAmountText());
+        Date start = getStartDate();
+        Date end = getEndDate();
 
+        eventListener.onSetupSumbitted(all,start,end);
     }
 
-    public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }
