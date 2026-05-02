@@ -15,7 +15,7 @@ public class Setup extends AbstractModel {
 
     public void setCycle(Budget budget){
 
-        String createBudgetQuery = "INSERT INTO budget (allowance, start_date, end_date, daily_safe_limit) VALUES (?, ?, ?, ?)";
+        String createBudgetQuery = "INSERT INTO Budget (allowance, start_date, end_date, daily_safe_limit) VALUES (?, ?, ?, ?)";
         String updateStudentQuery = "UPDATE Student SET student_state = 'ACTIVE'";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -37,7 +37,7 @@ public class Setup extends AbstractModel {
         }
     }
     public void clearCycle() {
-        String deleteBudgetSql = "DELETE FROM budget";
+        String deleteBudgetSql = "DELETE FROM Budget";
         String updateStudentSql = "UPDATE Student SET student_state = 'INACTIVE'";
 
         try (PreparedStatement deleteStmt = connection.prepareStatement(deleteBudgetSql);

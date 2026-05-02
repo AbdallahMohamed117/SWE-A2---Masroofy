@@ -2,12 +2,17 @@ package com.example.masroofy.View;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import com.example.masroofy.Listener.SetupListener;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class SetupView implements AbstractView {
-
+    private SetupListener eventListener;
     @FXML private TextField etAllowanceAmount;
-    @FXML private TextField etStartDate;
-    @FXML private TextField etEndDate;
+    @FXML private DatePicker etStartDate;
+    @FXML private DatePicker etEndDate;
     @FXML private Label tvSetupError;
     @FXML private Button btnStartCycle;
 
@@ -23,14 +28,29 @@ public class SetupView implements AbstractView {
         tvSetupError.setVisible(true);
     }
 
+    public void setEventListener(SetupListener sl) {
+        eventListener = sl;
+    }
     public String getAmountText()    { return etAllowanceAmount.getText(); }
-    public String getStartDateText() { return etStartDate.getText(); }
-    public String getEndDateText()   { return etEndDate.getText(); }
+    public Date getStartDate() {
+        LocalDate lc = etStartDate.getValue();
+        Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return date;
+    }
+    public Date getEndDate()   {
+        LocalDate lc = etEndDate.getValue();
+        Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return date;
+    }
 
     @FXML
     public void onStartCycleClicked() {
-        onSetupSubmitted(getAmountText(), getStartDateText(), getEndDateText());
+
+        double all = Double.parseDouble(getAmountText());
+        Date start = getStartDate();
+        Date end = getEndDate();
+
+        eventListener.onSetupSumbitted(all,start,end);
     }
 
-    public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }

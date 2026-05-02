@@ -39,7 +39,7 @@ public class Budget {
         return dailySafeLimit;
     }
 
-    public void setDailysafeLimit(double dailysafeLimit) {
+    public void setDailysafeLimit() {
         //needs full implementation !!!!!!!
 
         //to get the number of days

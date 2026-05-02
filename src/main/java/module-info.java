@@ -12,4 +12,7 @@ module com.example.masroofy {
 
     exports com.example.masroofy;
     exports com.example.masroofy.View;
+    exports com.example.masroofy.Listener;
+    exports com.example.masroofy.Model;
+    exports com.example.masroofy.Controller;
 }
