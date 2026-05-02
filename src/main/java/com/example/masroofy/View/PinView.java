@@ -13,42 +13,16 @@ public class PinView implements AbstractView {
     @FXML private Circle pinDot4;
     @FXML private Button btnSubmitPin;
 
-    private StringBuilder enteredPin = new StringBuilder();
+    private final StringBuilder enteredPin = new StringBuilder();
 
     @Override
-    public void printScreen() {}
-
-    @FXML
-    public void initialize() {
+    public void printScreen() {
+        showPinEntry();
     }
 
+    public String getEnteredPin() { return enteredPin.toString(); }
 
-    @FXML
-    private void onDigitClicked(javafx.event.ActionEvent e) {
-        if (enteredPin.length() >= 4) return;
-        String digit = ((Button) e.getSource()).getText();
-        enteredPin.append(digit);
-        updateDots();
-    }
-
-    @FXML
-    private void onDeleteClicked() {
-        if (enteredPin.length() == 0) return;
-        enteredPin.deleteCharAt(enteredPin.length() - 1);
-        updateDots();
-    }
-
-    @FXML
-    private void onSubmitPin() {
-        if (enteredPin.length() < 4) {
-            showErrorMessage("Please enter a 4-digit PIN.");
-            return;
-        }
-        onPinSubmitted(enteredPin.toString());
-    }
-
-
-
+    // ── Display methods ────────────────────────────────────────────────────────
     public void showPinEntry() {
         enteredPin.setLength(0);
         updateDots();
@@ -60,7 +34,6 @@ public class PinView implements AbstractView {
         pinDot2.setFill(red);
         pinDot3.setFill(red);
         pinDot4.setFill(red);
-
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -75,7 +48,6 @@ public class PinView implements AbstractView {
     public void showLockout(int seconds) {
         btnSubmitPin.setDisable(true);
         btnSubmitPin.setText("Try again in " + seconds + "s");
-
         new Thread(() -> {
             try {
                 Thread.sleep(seconds * 1000L);
@@ -88,14 +60,33 @@ public class PinView implements AbstractView {
         }).start();
     }
 
-    public void onPinSubmitted(String pin) {
+    @FXML
+    public void initialize() {}
+
+    @FXML
+    private void onDigitClicked(javafx.event.ActionEvent e) {
+        if (enteredPin.length() >= 4) return;
+        enteredPin.append(((Button) e.getSource()).getText());
+        updateDots();
     }
 
+    @FXML
+    private void onDeleteClicked() {
+        if (enteredPin.length() == 0) return;
+        enteredPin.deleteCharAt(enteredPin.length() - 1);
+        updateDots();
+    }
+
+    @FXML
+    private void onSubmitPin() {
+        onPinSubmitted(getEnteredPin());
+    }
+
+    public void onPinSubmitted(String pin) {}
 
     private void updateDots() {
         Color filled = Color.web("#38bdf8");
         Color empty  = Color.web("#1e293b");
-
         pinDot1.setFill(enteredPin.length() >= 1 ? filled : empty);
         pinDot2.setFill(enteredPin.length() >= 2 ? filled : empty);
         pinDot3.setFill(enteredPin.length() >= 3 ? filled : empty);
