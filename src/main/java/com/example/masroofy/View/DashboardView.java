@@ -2,9 +2,15 @@ package com.example.masroofy.View;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -15,6 +21,7 @@ public class DashboardView implements AbstractView, Initializable {
     @FXML private Button btnLogExpense;
     @FXML private Button btnHistory;
     @FXML private ProgressBar progressBar;
+    @FXML private VBox categoryContainer;
 
     private double dailyLimit;
     private Map<String, Double> categoryData;
@@ -28,6 +35,7 @@ public class DashboardView implements AbstractView, Initializable {
     public void printScreen() {
         showSafeDailyLimit();
         showPieChart();
+        showCategoryInsights();
     }
 
     public void showSafeDailyLimit() {
@@ -35,15 +43,25 @@ public class DashboardView implements AbstractView, Initializable {
     }
 
     public void setDailyLimit(double limit) {
-        dailyLimit = limit;
+        this.dailyLimit = limit;
     }
 
     public void showPieChart() {
-        // TODO: update chart with real data
+        // TODO: implement pie chart if needed
     }
 
     public void setPieChart(Map<String, Double> data) {
-        categoryData = data;
+        this.categoryData = data;
+    }
+
+    public void showCategoryInsights() {
+        if (categoryContainer == null || categoryData == null || categoryData.isEmpty()) return;
+
+        categoryContainer.getChildren().clear();
+
+        categoryData.forEach((category, amount) -> {
+            System.out.println(category + ": EGP " + String.format("%.2f", amount));
+        });
     }
 
     public void showAlert(String message) {
@@ -66,13 +84,6 @@ public class DashboardView implements AbstractView, Initializable {
         tvDailyLimit.setText("No Data");
     }
 
-    @FXML
-    public void onLogExpenseClicked() {
-        // TODO: navigate to QuickEntryView
-    }
-
-    @FXML
-    public void onHistoryClicked() {
-        // TODO: navigate to HistoryView
-    }
+    @FXML public void onLogExpenseClicked() { }
+    @FXML public void onHistoryClicked() { }
 }

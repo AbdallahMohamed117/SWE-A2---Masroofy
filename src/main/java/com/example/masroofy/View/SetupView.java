@@ -2,9 +2,6 @@ package com.example.masroofy.View;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class SetupView implements AbstractView {
 
@@ -15,7 +12,9 @@ public class SetupView implements AbstractView {
     @FXML private Button btnStartCycle;
 
     @Override
-    public void printScreen() {}
+    public void printScreen() {
+        tvSetupError.setVisible(false);
+    }
 
     public void showSetupScreen() {}
 
@@ -24,64 +23,14 @@ public class SetupView implements AbstractView {
         tvSetupError.setVisible(true);
     }
 
+    public String getAmountText()    { return etAllowanceAmount.getText(); }
+    public String getStartDateText() { return etStartDate.getText(); }
+    public String getEndDateText()   { return etEndDate.getText(); }
+
     @FXML
     public void onStartCycleClicked() {
-        tvSetupError.setVisible(false);
-
-        String amountText = etAllowanceAmount.getText();
-        String startText  = etStartDate.getText();
-        String endText    = etEndDate.getText();
-
-        if (amountText == null || amountText.isEmpty()) {
-            showErrorMessage("Please enter a valid amount.");
-            return;
-        }
-
-        double amount;
-        try {
-            amount = Double.parseDouble(amountText);
-        } catch (NumberFormatException e) {
-            showErrorMessage("Please enter a valid number.");
-            return;
-        }
-
-        if (amount <= 0) {
-            showErrorMessage("Allowance must be a positive number.");
-            return;
-        }
-
-        if (startText == null || startText.isEmpty()) {
-            showErrorMessage("Please enter a start date.");
-            return;
-        }
-
-        if (endText == null || endText.isEmpty()) {
-            showErrorMessage("Please enter an end date.");
-            return;
-        }
-
-        LocalDate startDate;
-        LocalDate endDate;
-        try {
-            startDate = LocalDate.parse(startText);
-            endDate   = LocalDate.parse(endText);
-        } catch (Exception e) {
-            showErrorMessage("Invalid date format. Use YYYY-MM-DD.");
-            return;
-        }
-
-        if (!endDate.isAfter(startDate)) {
-            showErrorMessage("End date must be after start date.");
-            return;
-        }
-
-        // Convert to Date
-        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date end   = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        onStartCycleClicked(amount, start, end);
+        onSetupSubmitted(getAmountText(), getStartDateText(), getEndDateText());
     }
 
-    public void onStartCycleClicked(double amount, Date start, Date end) {
-    }
+    public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }
