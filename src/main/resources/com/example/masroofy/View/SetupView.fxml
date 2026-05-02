@@ -11,6 +11,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.DatePicker?>
 <AnchorPane prefHeight="650.0" prefWidth="400.0" style="-fx-background-color: #0f172a;"
             xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.masroofy.View.SetupView">
@@ -63,8 +64,8 @@
                                 <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label style="-fx-font-size: 12;" text="Start Date" textFill="#cbd5e1" />
-                                        <TextField fx:id="etStartDate" promptText="YYYY-MM-DD"
-                                                   style="-fx-background-color: rgba(255,255,255,0.05);
+                                        <DatePicker fx:id="etStartDate" promptText="YYYY-MM-DD"
+                                                    style="-fx-background-color: rgba(255,255,255,0.05);
                                                           -fx-background-radius: 12;
                                                           -fx-border-color: rgba(255,255,255,0.1);
                                                           -fx-border-radius: 12; -fx-text-fill: white;
@@ -74,7 +75,7 @@
                                 <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label style="-fx-font-size: 12;" text="End Date" textFill="#cbd5e1" />
-                                        <TextField fx:id="etEndDate" promptText="YYYY-MM-DD"
+                                        <DatePicker fx:id="etEndDate" promptText="YYYY-MM-DD"
                                                    style="-fx-background-color: rgba(255,255,255,0.05);
                                                           -fx-background-radius: 12;
                                                           -fx-border-color: rgba(255,255,255,0.1);
