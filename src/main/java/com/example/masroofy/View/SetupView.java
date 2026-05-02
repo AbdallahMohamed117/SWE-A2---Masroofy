@@ -16,6 +16,8 @@ public class SetupView implements AbstractView {
         tvSetupError.setVisible(false);
     }
 
+    public void showSetupScreen() {}
+
     public void showErrorMessage(String msg) {
         tvSetupError.setText(msg);
         tvSetupError.setVisible(true);
@@ -30,5 +32,5 @@ public class SetupView implements AbstractView {
         onSetupSubmitted(getAmountText(), getStartDateText(), getEndDateText());
     }
 
-    public void onSetupSubmitted(String amountText, String startText, String endText) { }
+    public void onSetupSubmitted(String amountText, String startText, String endText) {}
 }
