@@ -19,14 +19,13 @@ public class PinController implements AbstractController, PinListener {
     @Override
     public boolean onPinSubmitted(String pin) {
         boolean validate = true;
-        if(model.pinExist()) {
+        if(!model.pinExist()) {
             model.setPin(pin);
         }
         else if(!model.checkPin(pin)) {
             validate = false;
             ++tries;
             if(tries > 5) {
-                view.showErrorMessage("Maximum Tries Reached, Wait 5 Minutes and Try Again");
                 view.showLockout(300);
             }
             else {

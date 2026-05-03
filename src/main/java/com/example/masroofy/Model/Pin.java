@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class Pin extends AbstractModel {
-    protected Pin() {
+    public Pin() {
         super();
     }
 
