@@ -33,12 +33,12 @@ public class HelloController {
     private void openSetupView() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/masroofy/View/PinView.fxml")
+                    getClass().getResource("/com/example/masroofy/View/HistoryView.fxml")
             );
             Parent root = loader.load();  // load once
-            PinView view = loader.getController();
-            Pin model = new Pin();
-            PinController controller = new PinController(model, view);
+            HistoryView view = loader.getController();
+            History model = new History();
+            HistoryController controller = new HistoryController(model, view);
             Scene scene = new Scene(root, 400, 650);  // use the same root
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);

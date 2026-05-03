@@ -6,7 +6,7 @@ import javafx.scene.layout.*;
 import java.util.Date;
 import java.util.List;
 import com.example.masroofy.Model.Entity.Transaction;
-
+import com.example.masroofy.Listener.HistoryListener;
 public class HistoryView implements AbstractView {
 
     @FXML private Label totalExpensesLabel;
@@ -15,13 +15,15 @@ public class HistoryView implements AbstractView {
     @FXML private Button categoryFilterButton;
     @FXML private Button dateFilterButton;
 
-    private List<Transaction> transactions;
+    private HistoryListener listener;
 
     @Override
     public void printScreen() {}
 
+    public void setListener(HistoryListener l) {
+        listener = l;
+    }
     public void showTransactions(List<Transaction> list) {
-        this.transactions = list;
         transactionListVBox.getChildren().clear();
 
         if (list == null || list.isEmpty()) {
@@ -87,7 +89,8 @@ public class HistoryView implements AbstractView {
     private void onAddTransactionClicked() {}
 
     @FXML
-    private void onBackClicked() {}
+    private void onBackClicked() {
+    }
 
     public void applyFilter(String category, Date from, Date to) {}
 

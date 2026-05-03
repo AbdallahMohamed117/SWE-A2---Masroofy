@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class DashboardController implements AbstractController {
 
-    public DashboardController(DashboardView v, Dashboard m) {
+    public DashboardController(Dashboard m, DashboardView v) {
         view = v;
         model = m;
     }
