@@ -12,8 +12,10 @@ public class HistoryView implements AbstractView {
     @FXML private Label totalExpensesLabel;
     @FXML private Label transactionCountLabel;
     @FXML private VBox transactionListVBox;
-    @FXML private Button categoryFilterButton;
-    @FXML private Button dateFilterButton;
+
+    @FXML private ComboBox<String> categoryComboBox;
+    @FXML private ComboBox<String> dateComboBox;
+    @FXML private Button btnApplyFilter;
 
     private HistoryListener listener;
 
@@ -22,6 +24,50 @@ public class HistoryView implements AbstractView {
 
     public void setListener(HistoryListener l) {
         listener = l;
+    }
+
+    public void initialize() {
+        styleComboBox(categoryComboBox, "Category");
+        styleComboBox(dateComboBox, "Date");
+    }
+
+    private void styleComboBox(ComboBox<String> comboBox, String prompt) {
+        comboBox.setButtonCell(createPromptCell(prompt));
+        comboBox.setCellFactory(listView -> createDropdownCell());
+    }
+
+    private ListCell<String> createPromptCell(String prompt) {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(prompt);
+                    setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 13;");
+                } else {
+                    setText(item);
+                    setStyle("-fx-text-fill: white; -fx-font-size: 13;");
+                }
+            }
+        };
+    }
+
+    private ListCell<String> createDropdownCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setBackground(null);
+                } else {
+                    setText(item);
+                    setStyle("-fx-text-fill: white; -fx-font-size: 13;");
+                    setBackground(javafx.scene.layout.Background.fill(
+                        javafx.scene.paint.Color.TRANSPARENT));
+                }
+            }
+        };
     }
     public void showTransactions(List<Transaction> list) {
         transactionListVBox.getChildren().clear();
@@ -72,17 +118,20 @@ public class HistoryView implements AbstractView {
         alert.showAndWait();
     }
 
-    public void showEditForm(Transaction transaction) {}
+    public void showEditForm(Transaction transaction) {
+
+    }
 
     @FXML
-    private void onCategoryFilterClicked() {}
+    private void onCategoryFilterClicked() {
+
+    }
 
     @FXML
     private void onDateFilterClicked() {}
 
     @FXML
     private void onApplyFilterClicked() {
-        applyFilter(null, null, null);
     }
 
 
@@ -91,7 +140,6 @@ public class HistoryView implements AbstractView {
     private void onBackClicked() {
     }
 
-    public void applyFilter(String category, Date from, Date to) {}
 
     private HBox buildTransactionRow(Transaction t) {
         HBox row = new HBox(15);
@@ -140,4 +188,5 @@ public class HistoryView implements AbstractView {
             default: return "💰";
         }
     }
+
 }

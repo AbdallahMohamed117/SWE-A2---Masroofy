@@ -23,12 +23,12 @@ public class HistoryController implements AbstractController, HistoryListener {
     }
 
     @Override
-    public void onCategoryFilerClicked() {
+    public void onCategoryFilerClicked(String category) {
 
     }
 
     @Override
-    public void onDateFilterClicked() {
+    public void onDateFilterClicked(Date date) {
 
     }
 
@@ -51,11 +51,6 @@ public class HistoryController implements AbstractController, HistoryListener {
 
     @Override
     public void onDeleteClicked(Transaction transaction) {
-
-    }
-
-    @Override
-    public void onFilterApplied(String category, Date from, Date to) {
 
     }
 

@@ -5,11 +5,10 @@ import com.example.masroofy.Model.Entity.Transaction;
 import java.util.Date;
 
 public interface HistoryListener {
-    public void onCategoryFilerClicked();
-    public void onDateFilterClicked();
+    public void onCategoryFilerClicked(String category);
+    public void onDateFilterClicked(Date date);
     public void onApplyFilterClicked();
     void onEditClicked(Transaction transaction);
     void onEditSubmitted(Transaction transaction);
     void onDeleteClicked(Transaction transaction);
-    void onFilterApplied(String category, Date from, Date to);
 }
