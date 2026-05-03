@@ -3,6 +3,7 @@ package com.example.masroofy.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import com.example.masroofy.Model.Entity.Transaction;
@@ -144,9 +145,28 @@ public class HistoryView implements AbstractView {
     private void onApplyFilterClicked() {
         if (listener != null) {
             String category = categoryComboBox.getValue();
-            String dateFilter = dateComboBox.getValue();
-            listener.onFilterApplied(category, dateFilter);
+            Date[] dateRange = getDateRangeFromSelection(dateComboBox.getValue());
+            listener.onFilterApplied(category, dateRange[0], dateRange[1]);
         }
+    }
+
+    private Date[] getDateRangeFromSelection(String selection) {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        Date from = null;
+
+        if ("Last Day".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            from = cal.getTime();
+        } else if ("Last Week".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            from = cal.getTime();
+        } else if ("Last Month".equals(selection)) {
+            cal.add(Calendar.MONTH, -1);
+            from = cal.getTime();
+        }
+
+        return new Date[] { from, now };
     }
 
 
