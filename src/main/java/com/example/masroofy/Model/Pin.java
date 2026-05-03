@@ -42,7 +42,7 @@ public class Pin extends AbstractModel {
         return false;
     }
 
-    public boolean isExist() {
+    public boolean pinExist() {
         String checkPin = "SELECT student_pincode FROM Student";
 
         try(PreparedStatement checkPinStatement = connection.prepareStatement(checkPin)) {

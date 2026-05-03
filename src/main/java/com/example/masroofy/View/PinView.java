@@ -4,9 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
+import com.example.masroofy.Listener.PinListener;
 public class PinView implements AbstractView {
-
+    private PinListener pinListener;
     @FXML private Circle pinDot1;
     @FXML private Circle pinDot2;
     @FXML private Circle pinDot3;
@@ -19,7 +19,9 @@ public class PinView implements AbstractView {
     public void printScreen() {
         showPinEntry();
     }
-
+    public void setPinListener(PinListener pl) {
+        pinListener = pl;
+    }
     public String getEnteredPin() { return enteredPin.toString(); }
 
     // ── Display methods ────────────────────────────────────────────────────────
@@ -79,11 +81,8 @@ public class PinView implements AbstractView {
 
     @FXML
     private void onSubmitPin() {
-        onPinSubmitted(getEnteredPin());
+        pinListener.onPinSubmitted(getEnteredPin());
     }
-
-    public void onPinSubmitted(String pin) {}
-
     private void updateDots() {
         Color filled = Color.web("#38bdf8");
         Color empty  = Color.web("#1e293b");
