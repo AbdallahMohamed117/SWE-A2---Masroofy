@@ -3,17 +3,18 @@ package com.example.masroofy.Model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Pin extends AbstractModel {
     protected Pin() {
         super();
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         String setPinQuery = "INSERT INTO Student (student_pincode, student_state, budget_id) VALUES (?, 'INACTIVE', ?)";
 
         try (PreparedStatement setPinStatement = connection.prepareStatement(setPinQuery)){
-            setPinStatement.setInt(1, pin);
+            setPinStatement.setString(1, pin);
             setPinStatement.setInt(2,1 );
 
             setPinStatement.executeUpdate();
@@ -23,7 +24,7 @@ public class Pin extends AbstractModel {
         }
     }
 
-    public boolean checkPin(int enteredPin) {
+    public boolean checkPin(String enteredPin) {
         String checkPinQuery = "SELECT student_pincode FROM Student";
 
         try (PreparedStatement checkPinStatement = connection.prepareStatement(checkPinQuery)) {
@@ -31,11 +32,23 @@ public class Pin extends AbstractModel {
             ResultSet result = checkPinStatement.executeQuery();
 
             if (result.next()){
-                int storedPin = result.getInt("student_pincode");
-                return storedPin == enteredPin;
+                String storedPin = result.getString("student_pincode");
+                return Objects.equals(storedPin, enteredPin);
             }
         }
         catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isExist() {
+        String checkPin = "SELECT student_pincode FROM Student";
+
+        try(PreparedStatement checkPinStatement = connection.prepareStatement(checkPin)) {
+            ResultSet result = checkPinStatement.executeQuery();
+            return result.next();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
