@@ -34,7 +34,6 @@ public class HelloController {
 
     private void openSetupView() {
         try {
-
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/masroofy/View/HistoryView.fxml")
             );

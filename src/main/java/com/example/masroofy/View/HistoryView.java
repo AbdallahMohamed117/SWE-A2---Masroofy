@@ -17,6 +17,7 @@ public class HistoryView implements AbstractView {
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private ComboBox<String> dateComboBox;
     @FXML private Button btnApplyFilter;
+    @FXML private Button btnClearFilter;
 
     private HistoryListener listener;
 
@@ -134,20 +135,10 @@ public class HistoryView implements AbstractView {
     }
 
     @FXML
-    private void onCategoryFilterClicked() {
-
-    }
-
-    @FXML
-    private void onDateFilterClicked() {}
-
-    @FXML
     private void onApplyFilterClicked() {
-        if (listener != null) {
-            String category = categoryComboBox.getValue();
-            Date[] dateRange = getDateRangeFromSelection(dateComboBox.getValue());
-            listener.onFilterApplied(category, dateRange[0], dateRange[1]);
-        }
+        String category = categoryComboBox.getValue();
+        Date[] dateRange = getDateRangeFromSelection(dateComboBox.getValue());
+        listener.onFilterApplied(category, dateRange[0], dateRange[1]);
     }
 
     private Date[] getDateRangeFromSelection(String selection) {
@@ -171,10 +162,21 @@ public class HistoryView implements AbstractView {
 
 
 
+
+
     @FXML
-    private void onBackClicked() {
+    private void onClearFilterClicked() {
+        categoryComboBox.getSelectionModel().clearSelection();
+        dateComboBox.getSelectionModel().clearSelection();
+        if (listener != null) {
+            listener.onFilterCleared();
+        }
     }
 
+    @FXML
+    public void onBackClicked() {
+
+    }
 
     private HBox buildTransactionRow(Transaction t) {
         HBox row = new HBox(15);

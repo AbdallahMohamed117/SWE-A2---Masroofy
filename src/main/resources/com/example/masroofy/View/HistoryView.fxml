@@ -37,6 +37,7 @@
                         <ComboBox fx:id="categoryComboBox" promptText="Category" style="-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;" HBox.hgrow="ALWAYS" />
                         <ComboBox fx:id="dateComboBox" promptText="Date" style="-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnApplyFilter" onAction="#onApplyFilterClicked" style="-fx-background-color: #0d9488; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 8 20; -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;" text="Apply" />
+                        <Button fx:id="btnClearFilter" onAction="#onClearFilterClicked" style="-fx-background-color: rgba(255,255,255,0.08); -fx-text-fill: #cbd5e1; -fx-background-radius: 12; -fx-padding: 8 20; -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;" text="Clear" />
                     </children>
                 </HBox>
 

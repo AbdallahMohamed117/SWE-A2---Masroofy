@@ -26,22 +26,17 @@ public class HistoryController implements AbstractController, HistoryListener {
     }
 
     @Override
-    public void onCategoryFilterClicked(String category) {
-
-    }
-
-    @Override
-    public void onDateFilterClicked(Date date) {
-
-    }
-
-    @Override
     public void onFilterApplied(String category, Date fromDate, Date toDate) {
         String selectedCategory = category != null ? category : null;
         Date start = fromDate != null ? fromDate : null;
         Date end = toDate != null ? toDate : null;
 
         view.showTransactions(model.getTransactions(selectedCategory, start, end));
+    }
+
+    @Override
+    public void onFilterCleared() {
+        view.showTransactions(model.getTransactions());
     }
 
 
