@@ -1,8 +1,8 @@
 package com.example.masroofy;
 
-import com.example.masroofy.Controller.SetupController;
-import com.example.masroofy.Model.Setup;
-import com.example.masroofy.View.SetupView;
+import com.example.masroofy.Controller.*;
+import com.example.masroofy.Model.*;
+import com.example.masroofy.View.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -33,12 +33,12 @@ public class HelloController {
     private void openSetupView() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/masroofy/View/SetupView.fxml")
+                    getClass().getResource("/com/example/masroofy/View/PinView.fxml")
             );
             Parent root = loader.load();  // load once
-            SetupView view = loader.getController();
-            Setup model = new Setup();
-            SetupController controller = new SetupController(model, view);
+            PinView view = loader.getController();
+            Pin model = new Pin();
+            PinController controller = new PinController(model, view);
             Scene scene = new Scene(root, 400, 650);  // use the same root
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);
