@@ -26,6 +26,16 @@ public class HistoryView implements AbstractView {
         listener = l;
     }
 
+    public void setComboBox(List<String> categories) {
+        categoryComboBox.getItems().clear();
+        categoryComboBox.getItems().addAll(categories);
+    }
+
+    public void setDateFilters(List<String> dates) {
+        dateComboBox.getItems().clear();
+        dateComboBox.getItems().addAll(dates);
+    }
+
     public void initialize() {
         styleComboBox(categoryComboBox, "Category");
         styleComboBox(dateComboBox, "Date");
@@ -132,6 +142,11 @@ public class HistoryView implements AbstractView {
 
     @FXML
     private void onApplyFilterClicked() {
+        if (listener != null) {
+            String category = categoryComboBox.getValue();
+            String dateFilter = dateComboBox.getValue();
+            listener.onFilterApplied(category, dateFilter);
+        }
     }
 
 

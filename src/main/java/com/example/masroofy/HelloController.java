@@ -42,7 +42,7 @@ public class HelloController {
             HistoryView view = loader.getController();
             History model = new History();
             HistoryController controller = new HistoryController((History) model, (HistoryView) view);
-            Scene scene = new Scene(root, 400, 650);
+            Scene scene = new Scene(root, 500, 750);
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {

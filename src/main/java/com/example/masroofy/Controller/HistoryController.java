@@ -15,6 +15,7 @@ public class HistoryController implements AbstractController, HistoryListener {
         model = m;
         view = v;
         view.setListener(this);
+        view.setComboBox(model.getCategories());
         PrintView();
     }
     @Override
@@ -23,7 +24,7 @@ public class HistoryController implements AbstractController, HistoryListener {
     }
 
     @Override
-    public void onCategoryFilerClicked(String category) {
+    public void onCategoryFilterClicked(String category) {
 
     }
 
@@ -33,8 +34,8 @@ public class HistoryController implements AbstractController, HistoryListener {
     }
 
     @Override
-    public void onApplyFilterClicked() {
-
+    public void onFilterApplied(String category, String dateFilter) {
+        // TODO: implement filter logic
     }
 
 

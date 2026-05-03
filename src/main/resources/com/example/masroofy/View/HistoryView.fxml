@@ -5,8 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.URL?>
 
 <AnchorPane prefHeight="734.0" prefWidth="494.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.HistoryView">
+    <stylesheets>
+        <URL value="@history.css" />
+    </stylesheets>
     <children>
         <Circle fill="#0ea5e9" layoutX="350.0" layoutY="80.0" radius="80.0" style="-fx-opacity: 0.12;" />
         <Circle fill="#6366f1" layoutX="50.0" layoutY="600.0" radius="90.0" style="-fx-opacity: 0.08;" />

@@ -97,4 +97,18 @@ public class History extends AbstractModel {
         }
         return false;
     }
+
+    public List<String> getCategories() {
+        String getCategoriesQuery = "SELECT category_name FROM Category";
+        List<String> categories = new ArrayList<>();
+        try(PreparedStatement getCategoryStatement = connection.prepareStatement(getCategoriesQuery)) {
+            ResultSet result = getCategoryStatement.executeQuery();
+            while(result.next()) {
+                categories.add(result.getString("category_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
 }
