@@ -42,7 +42,6 @@ public class HelloController {
             HistoryView view = loader.getController();
             History model = new History();
             HistoryController controller = new HistoryController((History) model, (HistoryView) view);
-            controller.PrintView();
             Scene scene = new Scene(root, 400, 650);
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);

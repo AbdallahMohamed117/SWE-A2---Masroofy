@@ -15,6 +15,7 @@ public class HistoryController implements AbstractController, HistoryListener {
         model = m;
         view = v;
         view.setListener(this);
+        PrintView();
     }
     @Override
     public void PrintView() {
@@ -27,7 +28,7 @@ public class HistoryController implements AbstractController, HistoryListener {
     }
 
     @Override
-    public void onDataFilterClicked() {
+    public void onDateFilterClicked() {
 
     }
 

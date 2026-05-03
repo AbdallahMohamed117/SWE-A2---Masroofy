@@ -6,7 +6,7 @@ import java.util.Date;
 
 public interface HistoryListener {
     public void onCategoryFilerClicked();
-    public void onDataFilterClicked();
+    public void onDateFilterClicked();
     public void onApplyFilterClicked();
     void onEditClicked(Transaction transaction);
     void onEditSubmitted(Transaction transaction);
