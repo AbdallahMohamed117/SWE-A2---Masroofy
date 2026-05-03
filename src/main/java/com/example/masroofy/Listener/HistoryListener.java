@@ -8,7 +8,6 @@ public interface HistoryListener {
     public void onCategoryFilerClicked();
     public void onDataFilterClicked();
     public void onApplyFilterClicked();
-    public void onAddTransactionClicked();
     void onEditClicked(Transaction transaction);
     void onEditSubmitted(Transaction transaction);
     void onDeleteClicked(Transaction transaction);

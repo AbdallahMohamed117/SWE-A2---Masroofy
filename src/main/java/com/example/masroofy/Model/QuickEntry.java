@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 
 public class QuickEntry extends AbstractModel {
-    protected QuickEntry() {
+    public QuickEntry() {
         super();
     }
 
@@ -17,30 +17,38 @@ public class QuickEntry extends AbstractModel {
 
         String studentIdQuery         = "SELECT student_id FROM Student WHERE student_state = 'ACTIVE'";
         String categoryIdQuery        = "SELECT category_id FROM Category WHERE category_name = ?";
+        String insertCategoryQuery    = "INSERT INTO Category (category_name) VALUES (?)";
         String insertTransactionQuery = "INSERT INTO Transactions (transaction_amount, transaction_timestamp, student_id, category_id) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement studentStatement             = connection.prepareStatement(studentIdQuery);
-             PreparedStatement getCategoryIdStatement       = connection.prepareStatement(categoryIdQuery);
-             PreparedStatement insertTransactionStatement   = connection.prepareStatement(insertTransactionQuery))
+        try (PreparedStatement studentStatement           = connection.prepareStatement(studentIdQuery);
+             PreparedStatement getCategoryIdStatement     = connection.prepareStatement(categoryIdQuery);
+             PreparedStatement insertCategoryStatement    = connection.prepareStatement(insertCategoryQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+             PreparedStatement insertTransactionStatement = connection.prepareStatement(insertTransactionQuery))
         {
             ResultSet studentResult = studentStatement.executeQuery();
             if (studentResult.next()) {
                 int studentId = studentResult.getInt("student_id");
 
-                getCategoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
+                String categoryName = transaction.getTransactionCategory().getCategoryName();
+                getCategoryIdStatement.setString(1, categoryName);
                 ResultSet categoryResult = getCategoryIdStatement.executeQuery();
+
+                int categoryId;
                 if (categoryResult.next()) {
-                    int categoryId = categoryResult.getInt("category_id");
-
-                    long timestamp = System.currentTimeMillis();
-
-                    insertTransactionStatement.setDouble(1, transaction.getTransactionAmount());
-                    insertTransactionStatement.setLong  (2, timestamp);
-                    insertTransactionStatement.setInt   (3, studentId);
-                    insertTransactionStatement.setInt   (4, categoryId);
-
-                    insertTransactionStatement.executeUpdate();
+                    categoryId = categoryResult.getInt("category_id");
+                } else {
+                    insertCategoryStatement.setString(1, categoryName);
+                    insertCategoryStatement.executeUpdate();
+                    ResultSet generatedKeys = insertCategoryStatement.getGeneratedKeys();
+                    generatedKeys.next();
+                    categoryId = (int) generatedKeys.getLong(1);
                 }
+
+                insertTransactionStatement.setDouble(1, transaction.getTransactionAmount());
+                insertTransactionStatement.setLong  (2, System.currentTimeMillis());
+                insertTransactionStatement.setInt   (3, studentId);
+                insertTransactionStatement.setInt   (4, categoryId);
+                insertTransactionStatement.executeUpdate();
             }
         }
         catch (SQLException e) {

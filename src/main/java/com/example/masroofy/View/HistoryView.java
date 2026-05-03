@@ -85,8 +85,7 @@ public class HistoryView implements AbstractView {
         applyFilter(null, null, null);
     }
 
-    @FXML
-    private void onAddTransactionClicked() {}
+
 
     @FXML
     private void onBackClicked() {

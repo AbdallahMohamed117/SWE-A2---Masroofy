@@ -2,6 +2,8 @@ package com.example.masroofy;
 
 import com.example.masroofy.Controller.*;
 import com.example.masroofy.Model.*;
+import com.example.masroofy.Model.Entity.Category;
+import com.example.masroofy.Model.Entity.Transaction;
 import com.example.masroofy.View.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -32,14 +34,16 @@ public class HelloController {
 
     private void openSetupView() {
         try {
+
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/masroofy/View/HistoryView.fxml")
             );
-            Parent root = loader.load();  // load once
+            Parent root = loader.load();
             HistoryView view = loader.getController();
             History model = new History();
-            HistoryController controller = new HistoryController(model, view);
-            Scene scene = new Scene(root, 400, 650);  // use the same root
+            HistoryController controller = new HistoryController((History) model, (HistoryView) view);
+            controller.PrintView();
+            Scene scene = new Scene(root, 400, 650);
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {

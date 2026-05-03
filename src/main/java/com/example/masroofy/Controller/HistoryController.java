@@ -36,10 +36,7 @@ public class HistoryController implements AbstractController, HistoryListener {
 
     }
 
-    @Override
-    public void onAddTransactionClicked() {
 
-    }
 
     @Override
     public void onEditClicked(Transaction transaction) {
