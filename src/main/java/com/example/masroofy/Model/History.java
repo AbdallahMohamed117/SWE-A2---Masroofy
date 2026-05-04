@@ -7,31 +7,48 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class History extends AbstractModel {
-    protected History() {
+    public History() {
         super();
     }
 
     public List<Transaction> getTransactions() {
+        return getTransactions(null, null, null);
+    }
 
-        String getTransactionsQuery = "SELECT t.transaction_amount, t.transaction_timestamp, c.category_name " +
-                "FROM Transactions t JOIN Category c ON t.category_id = c.category_id";
+    public List<Transaction> getTransactions(String category, Date from, Date to) {
+
+        StringBuilder query = new StringBuilder(
+                "SELECT t.transaction_amount, t.transaction_timestamp, c.category_name " +
+                        "FROM Transactions t JOIN Category c ON t.category_id = c.category_id " +
+                        "WHERE 1=1 "
+        );
+
+        if (category != null) query.append("AND c.category_name = ? ");
+        if (from     != null) query.append("AND t.transaction_timestamp >= ? ");
+        if (to       != null) query.append("AND t.transaction_timestamp <= ? ");
 
         List<Transaction> transactions = new ArrayList<>();
 
-        try (PreparedStatement getTransactionsStatement = connection.prepareStatement(getTransactionsQuery))
-        {
-            ResultSet result = getTransactionsStatement.executeQuery();
+        try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+
+            int index = 1;
+            if (category != null) stmt.setString(index++, category);
+            if (from     != null) stmt.setLong  (index++, from.getTime());
+            if (to       != null) stmt.setLong  (index++, to.getTime());
+
+            ResultSet result = stmt.executeQuery();
             while (result.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTransactionAmount   (result.getDouble("transaction_amount"));
                 transaction.setTransactionTimestamp(result.getLong  ("transaction_timestamp"));
 
-                Category category = new Category();
-                category.setCategoryName(result.getString("category_name"));
-                transaction.setTransactionCategory(category);
+                Category c = new Category();
+                c.setCategoryName(result.getString("category_name"));
+                transaction.setTransactionCategory(c);
 
                 transactions.add(transaction);
             }
@@ -79,5 +96,19 @@ public class History extends AbstractModel {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<String> getCategories() {
+        String getCategoriesQuery = "SELECT category_name FROM Category";
+        List<String> categories = new ArrayList<>();
+        try(PreparedStatement getCategoryStatement = connection.prepareStatement(getCategoriesQuery)) {
+            ResultSet result = getCategoryStatement.executeQuery();
+            while(result.next()) {
+                categories.add(result.getString("category_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
     }
 }

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Budget (
 
 CREATE TABLE IF NOT EXISTS Student (
     student_id      INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_pincode INTEGER NOT NULL,
+    student_pincode TEXT NOT NULL,
     student_state   TEXT    NOT NULL CHECK(student_state IN ('ACTIVE', 'INACTIVE')),
     budget_id       INTEGER NOT NULL UNIQUE,
     FOREIGN KEY (budget_id) REFERENCES Budget(budget_id) ON DELETE CASCADE

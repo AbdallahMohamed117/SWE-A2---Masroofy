@@ -1,8 +1,10 @@
 package com.example.masroofy;
 
-import com.example.masroofy.Controller.SetupController;
-import com.example.masroofy.Model.Setup;
-import com.example.masroofy.View.SetupView;
+import com.example.masroofy.Controller.*;
+import com.example.masroofy.Model.*;
+import com.example.masroofy.Model.Entity.Category;
+import com.example.masroofy.Model.Entity.Transaction;
+import com.example.masroofy.View.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -33,13 +35,13 @@ public class HelloController {
     private void openSetupView() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/masroofy/View/SetupView.fxml")
+                    getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml")
             );
-            Parent root = loader.load();  // load once
-            SetupView view = loader.getController();
-            Setup model = new Setup();
-            SetupController controller = new SetupController(model, view);
-            Scene scene = new Scene(root, 400, 650);  // use the same root
+            Parent root = loader.load();
+            QuickEntryView view = loader.getController();
+            QuickEntry model = new QuickEntry();
+            QuickEntryController controller = new QuickEntryController((QuickEntry) model, (QuickEntryView) view);
+            Scene scene = new Scene(root, 500, 750);
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {

@@ -3,25 +3,85 @@ package com.example.masroofy.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import com.example.masroofy.Model.Entity.Transaction;
-
+import com.example.masroofy.Listener.HistoryListener;
 public class HistoryView implements AbstractView {
 
     @FXML private Label totalExpensesLabel;
     @FXML private Label transactionCountLabel;
     @FXML private VBox transactionListVBox;
-    @FXML private Button categoryFilterButton;
-    @FXML private Button dateFilterButton;
 
-    private List<Transaction> transactions;
+    @FXML private ComboBox<String> categoryComboBox;
+    @FXML private ComboBox<String> dateComboBox;
+    @FXML private Button btnApplyFilter;
+    @FXML private Button btnClearFilter;
+
+    private HistoryListener listener;
 
     @Override
     public void printScreen() {}
 
+    public void setListener(HistoryListener l) {
+        listener = l;
+    }
+
+    public void setComboBox(List<String> categories) {
+        categoryComboBox.getItems().clear();
+        categoryComboBox.getItems().addAll(categories);
+    }
+
+    public void setDateFilters(List<String> dates) {
+        dateComboBox.getItems().clear();
+        dateComboBox.getItems().addAll(dates);
+    }
+
+    public void initialize() {
+        styleComboBox(categoryComboBox, "Category");
+        styleComboBox(dateComboBox, "Date");
+    }
+
+    private void styleComboBox(ComboBox<String> comboBox, String prompt) {
+        comboBox.setButtonCell(createPromptCell(prompt));
+        comboBox.setCellFactory(listView -> createDropdownCell());
+    }
+
+    private ListCell<String> createPromptCell(String prompt) {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(prompt);
+                    setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 13;");
+                } else {
+                    setText(item);
+                    setStyle("-fx-text-fill: white; -fx-font-size: 13;");
+                }
+            }
+        };
+    }
+
+    private ListCell<String> createDropdownCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setBackground(null);
+                } else {
+                    setText(item);
+                    setStyle("-fx-text-fill: white; -fx-font-size: 13;");
+                    setBackground(javafx.scene.layout.Background.fill(
+                        javafx.scene.paint.Color.TRANSPARENT));
+                }
+            }
+        };
+    }
     public void showTransactions(List<Transaction> list) {
-        this.transactions = list;
         transactionListVBox.getChildren().clear();
 
         if (list == null || list.isEmpty()) {
@@ -70,26 +130,53 @@ public class HistoryView implements AbstractView {
         alert.showAndWait();
     }
 
-    public void showEditForm(Transaction transaction) {}
+    public void showEditForm(Transaction transaction) {
 
-    @FXML
-    private void onCategoryFilterClicked() {}
-
-    @FXML
-    private void onDateFilterClicked() {}
-
-    @FXML
-    private void onApplyFilterClicked() {
-        applyFilter(null, null, null);
     }
 
     @FXML
-    private void onAddTransactionClicked() {}
+    private void onApplyFilterClicked() {
+        String category = categoryComboBox.getValue();
+        Date[] dateRange = getDateRangeFromSelection(dateComboBox.getValue());
+        listener.onFilterApplied(category, dateRange[0], dateRange[1]);
+    }
+
+    private Date[] getDateRangeFromSelection(String selection) {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        Date from = null;
+
+        if ("Last Day".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            from = cal.getTime();
+        } else if ("Last Week".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            from = cal.getTime();
+        } else if ("Last Month".equals(selection)) {
+            cal.add(Calendar.MONTH, -1);
+            from = cal.getTime();
+        }
+
+        return new Date[] { from, now };
+    }
+
+
+
+
 
     @FXML
-    private void onBackClicked() {}
+    private void onClearFilterClicked() {
+        categoryComboBox.getSelectionModel().clearSelection();
+        dateComboBox.getSelectionModel().clearSelection();
+        if (listener != null) {
+            listener.onFilterCleared();
+        }
+    }
 
-    public void applyFilter(String category, Date from, Date to) {}
+    @FXML
+    public void onBackClicked() {
+
+    }
 
     private HBox buildTransactionRow(Transaction t) {
         HBox row = new HBox(15);
@@ -138,4 +225,5 @@ public class HistoryView implements AbstractView {
             default: return "💰";
         }
     }
+
 }
