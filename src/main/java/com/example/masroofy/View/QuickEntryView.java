@@ -1,11 +1,18 @@
 package com.example.masroofy.View;
 
+import com.example.masroofy.Listener.QuickEntryListener;
+import com.example.masroofy.Model.Entity.Category;
+import com.example.masroofy.Model.Entity.Transaction;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class QuickEntryView implements AbstractView {
@@ -17,7 +24,7 @@ public class QuickEntryView implements AbstractView {
 
     private String selectedCategory = null;
     private VBox currentlySelectedTile = null;
-
+    private QuickEntryListener listener;
     @Override
     public void printScreen() {
         etAmountInput.clear();
@@ -25,6 +32,10 @@ public class QuickEntryView implements AbstractView {
         selectedCategory = null;
         currentlySelectedTile = null;
         if (categoryGrid != null) categoryGrid.getChildren().clear();
+    }
+
+    public void setListener(QuickEntryListener listener) {
+        this.listener = listener;
     }
 
     public String getAmountText()        { return etAmountInput.getText(); }
@@ -48,12 +59,12 @@ public class QuickEntryView implements AbstractView {
         alert.showAndWait();
     }
 
-    public void showCategories(List<String> categories) {
+    public void showCategories(List<Category> categories) {
         if (categoryGrid == null) return;
         categoryGrid.getChildren().clear();
         int col = 0, row = 0;
-        for (String cat : categories) {
-            VBox tile = buildCategoryTile(cat);
+        for (Category cat : categories) {
+            VBox tile = buildCategoryTile(cat.getCategoryName());
             categoryGrid.add(tile, col, row);
             col++;
             if (col == 3) {
@@ -95,13 +106,19 @@ public class QuickEntryView implements AbstractView {
     @FXML private void onBackClicked() { }
 
     @FXML private void onSubmitExpense() {
-        onExpenseSubmitted(getAmountText(), getSelectedCategory());
+        double amount = Double.parseDouble(getAmountText());
+        Category c = new Category();
+        c.setCategoryName(getSelectedCategory());
+        Transaction t = new Transaction();
+        t.setTransactionAmount(amount);
+        t.setTransactionCategory(c);
+        t.setTransactionTimestamp(System.currentTimeMillis());
+
+        listener.onSubmitExpense(t);
     }
 
     @FXML private void onAddCategoryClicked() {
-        onCategoryAdded(getNewCategoryText());
+        listener.onAddCategoryClicked(getNewCategoryText());
     }
 
-    public void onExpenseSubmitted(String amountText, String category) { }
-    public void onCategoryAdded(String categoryName) { }
 }

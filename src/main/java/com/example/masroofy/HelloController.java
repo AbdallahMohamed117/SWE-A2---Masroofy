@@ -35,12 +35,12 @@ public class HelloController {
     private void openSetupView() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/masroofy/View/HistoryView.fxml")
+                    getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml")
             );
             Parent root = loader.load();
-            HistoryView view = loader.getController();
-            History model = new History();
-            HistoryController controller = new HistoryController((History) model, (HistoryView) view);
+            QuickEntryView view = loader.getController();
+            QuickEntry model = new QuickEntry();
+            QuickEntryController controller = new QuickEntryController((QuickEntry) model, (QuickEntryView) view);
             Scene scene = new Scene(root, 500, 750);
             Stage stage = (Stage) progressBar.getScene().getWindow();
             stage.setScene(scene);

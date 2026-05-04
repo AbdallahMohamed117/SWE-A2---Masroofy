@@ -6,6 +6,8 @@ import com.example.masroofy.Model.Entity.Transaction;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class QuickEntry extends AbstractModel {
@@ -78,5 +80,25 @@ public class QuickEntry extends AbstractModel {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Category> getCategories() {
+        String getCategoriesQuery = "SELECT * FROM Category";
+        List<Category> categories = new ArrayList<>();
+
+        try (PreparedStatement getCategoriesStatement = connection.prepareStatement(getCategoriesQuery);
+             ResultSet resultSet = getCategoriesStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Category category = new Category();
+                category.setCategoryName(resultSet.getString("category_name"));
+                categories.add(category);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return categories;
     }
 }
