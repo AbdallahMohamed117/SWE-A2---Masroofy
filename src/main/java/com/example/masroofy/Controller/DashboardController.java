@@ -23,7 +23,7 @@ public class DashboardController implements AbstractController, DashboardListene
     }
 
     public void refreshDashboard() {
-        double limit = 60;
+        double limit = model.getDailyLimit();
 
         if (limit <= 0) {
             view.showNoDataMessage();
