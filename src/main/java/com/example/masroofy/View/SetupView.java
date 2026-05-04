@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class SetupView implements AbstractView {
     private SetupListener eventListener;
+    private Runnable onNavigateToDashboard;
     @FXML private TextField etAllowanceAmount;
     @FXML private DatePicker etStartDate;
     @FXML private DatePicker etEndDate;
@@ -31,6 +32,11 @@ public class SetupView implements AbstractView {
     public void setEventListener(SetupListener sl) {
         eventListener = sl;
     }
+
+    public void setOnNavigateToDashboard(Runnable r) {
+        this.onNavigateToDashboard = r;
+    }
+
     public String getAmountText()    { return etAllowanceAmount.getText(); }
     public Date getStartDate() {
         LocalDate lc = etStartDate.getValue();
@@ -50,7 +56,9 @@ public class SetupView implements AbstractView {
         Date start = getStartDate();
         Date end = getEndDate();
 
-        eventListener.onSetupSumbitted(all,start,end);
+        if (eventListener.onSetupSumbitted(all, start, end)) {
+            if (onNavigateToDashboard != null) onNavigateToDashboard.run();
+        }
     }
 
 }

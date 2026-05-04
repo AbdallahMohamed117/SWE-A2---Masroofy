@@ -1,11 +1,9 @@
 package com.example.masroofy.Model;
 
-import com.example.masroofy.Database.DatabaseConnection;
 import com.example.masroofy.Model.Entity.Category;
 import com.example.masroofy.Model.Entity.Transaction;
 
 import java.text.SimpleDateFormat;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,12 +23,12 @@ public class Dashboard extends AbstractModel {
 
         try (PreparedStatement prepareDailyLimit = connection.prepareStatement(getDailyLimitQuery)) {
             ResultSet resultDailyLimit = prepareDailyLimit.executeQuery();
-            double dailyLimit = resultDailyLimit.getDouble("daily_safe_limit");
-            return dailyLimit;
+            if (resultDailyLimit.next()) {
+                return resultDailyLimit.getDouble("daily_safe_limit");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // Daily Limit Doesn't exist
         return 0;
     }
 
@@ -39,7 +37,7 @@ public class Dashboard extends AbstractModel {
         String getTransactionsQuery = "SELECT t.*, c.category_name " +
                 "FROM Transactions t " +
                 "JOIN Category c ON t.category_id = c.category_id " +
-                "WHERE julianday('now') - julianday(DATE(t.transaction_timestamp)) = 0";
+                "WHERE julianday('now') - julianday(t.transaction_timestamp / 1000, 'unixepoch') < 1";
 
         try(PreparedStatement prepareTransactions = connection.prepareStatement(getTransactionsQuery)) {
             ResultSet resultTransactions = prepareTransactions.executeQuery();

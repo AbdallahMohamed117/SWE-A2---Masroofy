@@ -2,7 +2,6 @@ package com.example.masroofy.View;
 
 import com.example.masroofy.Listener.DashboardListener;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,12 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
-import java.net.URL;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-public class DashboardView implements AbstractView, Initializable {
+public class DashboardView implements AbstractView {
 
     @FXML private Label tvDailyLimit;
     @FXML private Label lblDaysLeft;
@@ -32,6 +28,8 @@ public class DashboardView implements AbstractView, Initializable {
     @FXML private VBox categoryContainer;
 
     private DashboardListener listener;
+    private Runnable onNavigateToQuickEntry;
+    private Runnable onNavigateToHistory;
     private double dailyLimit;
     private double totalSpent;
     private Map<String, Double> categoryData;
@@ -40,10 +38,8 @@ public class DashboardView implements AbstractView, Initializable {
         this.listener = listener;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // runs when screen loads
-    }
+    public void setOnNavigateToQuickEntry(Runnable r) { this.onNavigateToQuickEntry = r; }
+    public void setOnNavigateToHistory(Runnable r) { this.onNavigateToHistory = r; }
 
     @Override
     public void printScreen() {
@@ -80,7 +76,7 @@ public class DashboardView implements AbstractView, Initializable {
 
     public void setStatusIcon(boolean isOverspent) {
         if (lblStatusIcon != null) {
-            lblStatusIcon.setText(isOverspent ? "⚠️" : "✅");
+            lblStatusIcon.setText(isOverspent ? "\u26a0\ufe0f" : "\u2705");
         }
     }
 
@@ -113,7 +109,6 @@ public class DashboardView implements AbstractView, Initializable {
     }
 
     public void showPieChart() {
-        // TODO: implement pie chart if needed
     }
 
     public void setPieChart(Map<String, Double> data) {
@@ -157,15 +152,15 @@ public class DashboardView implements AbstractView, Initializable {
     }
 
     private String getCategoryEmoji(String category) {
-        if (category == null) return "💰";
+        if (category == null) return "\ud83d\udcb0";
         switch (category.toLowerCase()) {
-            case "food": return "🍔";
-            case "transport": return "🚗";
-            case "entertainment": return "🎮";
-            case "shopping": return "🛍️";
-            case "education": return "📚";
-            case "health": return "💊";
-            default: return "💰";
+            case "food": return "\ud83c\udf54";
+            case "transport": return "\ud83d\ude97";
+            case "entertainment": return "\ud83c\udfae";
+            case "shopping": return "\ud83d\uded2";
+            case "education": return "\ud83d\udcda";
+            case "health": return "\ud83d\udc8a";
+            default: return "\ud83d\udcb0";
         }
     }
 
@@ -189,6 +184,6 @@ public class DashboardView implements AbstractView, Initializable {
         tvDailyLimit.setText("No Data");
     }
 
-    @FXML public void onLogExpenseClicked() { if (listener != null) listener.onLogExpenseClicked(); }
-    @FXML public void onHistoryClicked() { if (listener != null) listener.onHistoryClicked(); }
+    @FXML public void onLogExpenseClicked() { if (onNavigateToQuickEntry != null) onNavigateToQuickEntry.run(); }
+    @FXML public void onHistoryClicked() { if (onNavigateToHistory != null) onNavigateToHistory.run(); }
 }

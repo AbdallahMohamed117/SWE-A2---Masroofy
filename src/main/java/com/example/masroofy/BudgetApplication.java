@@ -1,20 +1,17 @@
 package com.example.masroofy;
 
+import com.example.masroofy.App.AppController;
+import com.example.masroofy.App.Screen;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class BudgetApplication extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/masroofy/hello-view.fxml")
-        );
-        Scene scene = new Scene(loader.load(), 400, 650);
+    public void start(Stage primaryStage) {
+        AppController appController = new AppController(primaryStage);
+        appController.navigateTo(Screen.SPLASH);
         primaryStage.setTitle("Masroofy");
-        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
     }

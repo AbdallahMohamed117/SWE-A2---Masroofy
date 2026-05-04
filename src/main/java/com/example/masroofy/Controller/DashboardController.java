@@ -14,6 +14,7 @@ public class DashboardController implements AbstractController, DashboardListene
     public DashboardController(Dashboard m, DashboardView v) {
         view = v;
         model = m;
+        hModel = new History();
         view.setListener(this);
         PrintView();
     }
@@ -23,7 +24,7 @@ public class DashboardController implements AbstractController, DashboardListene
     }
 
     public void refreshDashboard() {
-        double limit = 60;
+        double limit = model.getDailyLimit();
 
         if (limit <= 0) {
             view.showNoDataMessage();
@@ -31,7 +32,7 @@ public class DashboardController implements AbstractController, DashboardListene
             return;
         }
 
-        List<Transaction> amounts = model.getPiechartData();
+        List<Transaction> amounts = hModel.getTransactions();
 
         double totalSpent = 0;
         Map<String, Double> piechart = new HashMap<>();
@@ -62,6 +63,7 @@ public class DashboardController implements AbstractController, DashboardListene
 
     private Dashboard model;
     private DashboardView view;
+    private History hModel;
 
     @Override
     public void onLogExpenseClicked() {
