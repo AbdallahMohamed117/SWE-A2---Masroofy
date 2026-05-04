@@ -1,5 +1,6 @@
 package com.example.masroofy.Model;
 
+import com.example.masroofy.Database.DatabaseConnection;
 import com.example.masroofy.Model.Entity.Category;
 import com.example.masroofy.Model.Entity.Transaction;
 
@@ -10,6 +11,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,37 +26,42 @@ public class Dashboard extends AbstractModel {
 
         try (PreparedStatement prepareDailyLimit = connection.prepareStatement(getDailyLimitQuery)) {
             ResultSet resultDailyLimit = prepareDailyLimit.executeQuery();
-            if (resultDailyLimit.next()) {
-                return resultDailyLimit.getDouble("daily_safe_limit");
-            }
+            double dailyLimit = resultDailyLimit.getDouble("daily_safe_limit");
+            return dailyLimit;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        // Daily Limit Doesn't exist
         return 0;
     }
 
     public List<Transaction> getPiechartData() {
-        List<Transaction> transactions = new LinkedList<>();
-        String getTransactionsQuery = "SELECT t.*, c.category_name " +
-                "FROM Transactions t " +
-                "JOIN Category c ON t.category_id = c.category_id " +
-                "WHERE julianday('now') - julianday(t.transaction_timestamp / 1000, 'unixepoch') < 1";
 
-        try(PreparedStatement prepareTransactions = connection.prepareStatement(getTransactionsQuery)) {
-            ResultSet resultTransactions = prepareTransactions.executeQuery();
-            while(resultTransactions.next()) {
+        StringBuilder query = new StringBuilder(
+                "SELECT t.transaction_amount, t.transaction_timestamp, c.category_name " +
+                        "FROM Transactions t JOIN Category c ON t.category_id = c.category_id " +
+                        "WHERE 1=1 "
+        );
+
+
+        List<Transaction> transactions = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+
+
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
                 Transaction transaction = new Transaction();
-                transaction.setTransactionAmount(resultTransactions.getDouble("transaction_amount"));
-                transaction.setTransactionTimestamp(resultTransactions.getLong("transaction_timestamp"));
+                transaction.setTransactionAmount(result.getDouble("transaction_amount"));
+                transaction.setTransactionTimestamp(result.getLong("transaction_timestamp"));
 
-                Category category = new Category();
-                category.setCategoryName(resultTransactions.getString("category_name"));
-                transaction.setTransactionCategory(category);
+                Category c = new Category();
+                c.setCategoryName(result.getString("category_name"));
+                transaction.setTransactionCategory(c);
 
                 transactions.add(transaction);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return transactions;
