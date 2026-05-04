@@ -49,6 +49,7 @@ public class HistoryController implements AbstractController, HistoryListener {
     @Override
     public void onEditSubmitted(Transaction transaction) {
 
+        model.editTransaction(transaction);
     }
 
     @Override
