@@ -1,5 +1,6 @@
 package com.example.masroofy.View;
 
+import com.example.masroofy.Listener.DashboardListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -23,8 +24,13 @@ public class DashboardView implements AbstractView, Initializable {
     @FXML private ProgressBar progressBar;
     @FXML private VBox categoryContainer;
 
+    private DashboardListener listener;
     private double dailyLimit;
     private Map<String, Double> categoryData;
+
+    public void setListener(DashboardListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,6 +90,6 @@ public class DashboardView implements AbstractView, Initializable {
         tvDailyLimit.setText("No Data");
     }
 
-    @FXML public void onLogExpenseClicked() { }
-    @FXML public void onHistoryClicked() { }
+    @FXML public void onLogExpenseClicked() { if (listener != null) listener.onLogExpenseClicked(); }
+    @FXML public void onHistoryClicked() { if (listener != null) listener.onHistoryClicked(); }
 }

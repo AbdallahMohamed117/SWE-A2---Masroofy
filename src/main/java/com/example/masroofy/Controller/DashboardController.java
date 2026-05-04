@@ -1,5 +1,6 @@
 package com.example.masroofy.Controller;
 
+import com.example.masroofy.Listener.DashboardListener;
 import com.example.masroofy.Model.*;
 import com.example.masroofy.Model.Entity.*;
 import com.example.masroofy.View.*;
@@ -8,11 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DashboardController implements AbstractController {
+public class DashboardController implements AbstractController, DashboardListener {
 
     public DashboardController(Dashboard m, DashboardView v) {
         view = v;
         model = m;
+        view.setListener(this);
     }
     @Override
     public void PrintView() {
@@ -40,4 +42,12 @@ public class DashboardController implements AbstractController {
 
     private Dashboard model;
     private DashboardView view;
+
+    @Override
+    public void onLogExpenseClicked() {
+    }
+
+    @Override
+    public void onHistoryClicked() {
+    }
 }
