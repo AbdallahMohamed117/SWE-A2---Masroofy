@@ -4,9 +4,14 @@ import com.example.masroofy.Database.DatabaseConnection;
 import com.example.masroofy.Model.Entity.Category;
 import com.example.masroofy.Model.Entity.Transaction;
 
+import java.text.SimpleDateFormat;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,5 +59,24 @@ public class Dashboard extends AbstractModel {
             e.printStackTrace();
         }
         return transactions;
+    }
+
+    public int getDaysLeft() {
+        String getEndDateQuery = "SELECT end_date FROM Budget";
+        try (PreparedStatement prepareEndDate = connection.prepareStatement(getEndDateQuery)) {
+            ResultSet result = prepareEndDate.executeQuery();
+            if (result.next()) {
+                String endDateStr = result.getString("end_date");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date parsedDate = sdf.parse(endDateStr);
+                LocalDate endDate = parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate today = LocalDate.now();
+                long days = ChronoUnit.DAYS.between(today, endDate);
+                return (int) Math.max(days, 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
