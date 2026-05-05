@@ -114,7 +114,8 @@ public class AppController {
                 quickEntryRoot = loader.load();
                 quickEntryView = loader.getController();
                 QuickEntry quickEntryModel = model.getQuickEntry();
-                new QuickEntryController(quickEntryModel, quickEntryView);
+                QuickEntryController qec = new QuickEntryController(quickEntryModel, quickEntryView);
+                qec.PrintView();
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
