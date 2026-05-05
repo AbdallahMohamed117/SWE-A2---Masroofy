@@ -67,70 +67,91 @@ public class History extends AbstractModel {
         String categoryIdQuery = "SELECT category_id FROM Category WHERE category_name = ?";
         String updateTransactionQuery = "UPDATE Transactions SET transaction_amount = ?, category_id = ? WHERE transaction_timestamp = ?";
 
-        double oldAmount = 0;
-        try (PreparedStatement getOldStmt = connection.prepareStatement(getOldTransactionQuery)) {
-            getOldStmt.setLong(1, transaction.getTransactionTimestamp());
-            ResultSet oldRs = getOldStmt.executeQuery();
-            if (oldRs.next()) {
-                oldAmount = oldRs.getDouble("transaction_amount");
-            } else {
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        try {
+            connection.setAutoCommit(false);
 
-        double newAmount = transaction.getTransactionAmount();
-        double delta = newAmount - oldAmount;
-
-        if (delta > 0) {
-            try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
-                ResultSet allowanceRs = getAllowanceStmt.executeQuery();
-                double currentAllowance = 0;
-                if (allowanceRs.next()) {
-                    currentAllowance = allowanceRs.getDouble("allowance");
+            double oldAmount = 0;
+            try (PreparedStatement getOldStmt = connection.prepareStatement(getOldTransactionQuery)) {
+                getOldStmt.setLong(1, transaction.getTransactionTimestamp());
+                ResultSet oldRs = getOldStmt.executeQuery();
+                if (oldRs.next()) {
+                    oldAmount = oldRs.getDouble("transaction_amount");
                 } else {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
                     return false;
                 }
+            }
+
+            double newAmount = transaction.getTransactionAmount();
+            if (newAmount <= 0) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+            double delta = newAmount - oldAmount;
+
+            if (delta > 0) {
+                double currentAllowance = 0;
+                try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
+                    ResultSet allowanceRs = getAllowanceStmt.executeQuery();
+                    if (allowanceRs.next()) {
+                        currentAllowance = allowanceRs.getDouble("allowance");
+                    } else {
+                        connection.rollback();
+                        connection.setAutoCommit(true);
+                        return false;
+                    }
+                }
                 if (delta > currentAllowance) {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
                     return false;
                 }
                 try (PreparedStatement updateAllowanceStmt = connection.prepareStatement(updateAllowanceQuery)) {
                     updateAllowanceStmt.setDouble(1, delta);
                     updateAllowanceStmt.executeUpdate();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else if (delta < 0) {
+                try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
+                    addAllowanceStmt.setDouble(1, Math.abs(delta));
+                    addAllowanceStmt.executeUpdate();
+                }
+            }
+
+            int categoryId = -1;
+            try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery)) {
+                categoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
+                ResultSet categoryResult = categoryIdStatement.executeQuery();
+                if (categoryResult.next()) {
+                    categoryId = categoryResult.getInt("category_id");
+                }
+            }
+            if (categoryId == -1) {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 return false;
             }
-        } else if (delta < 0) {
-            try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
-                addAllowanceStmt.setDouble(1, Math.abs(delta));
-                addAllowanceStmt.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
 
-        try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery);
-             PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery))
-        {
-            categoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
-            ResultSet categoryResult = categoryIdStatement.executeQuery();
-            if (categoryResult.next()) {
-                int categoryId = categoryResult.getInt("category_id");
-
+            try (PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery)) {
                 updateTransactionStatement.setDouble(1, newAmount);
                 updateTransactionStatement.setInt   (2, categoryId);
                 updateTransactionStatement.setLong  (3, transaction.getTransactionTimestamp());
+                int rows = updateTransactionStatement.executeUpdate();
 
-                return updateTransactionStatement.executeUpdate() > 0;
+                connection.commit();
+                connection.setAutoCommit(true);
+                return rows > 0;
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }

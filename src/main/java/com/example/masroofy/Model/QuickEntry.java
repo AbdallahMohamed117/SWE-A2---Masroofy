@@ -23,18 +23,65 @@ public class QuickEntry extends AbstractModel {
         String insertCategoryQuery    = "INSERT INTO Category (category_name) VALUES (?)";
         String insertTransactionQuery = "INSERT INTO Transactions (transaction_amount, transaction_timestamp, student_id, category_id) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
-            ResultSet allowanceRs = getAllowanceStmt.executeQuery();
-            double currentAllowance = 0;
-            if (allowanceRs.next()) {
-                currentAllowance = allowanceRs.getDouble("allowance");
-            } else {
+        try {
+            connection.setAutoCommit(false);
+
+            double transactionAmount = transaction.getTransactionAmount();
+            if (transactionAmount <= 0) {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 return false;
             }
 
-            double transactionAmount = transaction.getTransactionAmount();
-            if (transactionAmount > currentAllowance) {
+            int studentId = -1;
+            try (PreparedStatement studentStatement = connection.prepareStatement(studentIdQuery)) {
+                ResultSet studentResult = studentStatement.executeQuery();
+                if (studentResult.next()) {
+                    studentId = studentResult.getInt("student_id");
+                }
+            }
+            if (studentId == -1) {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 return false;
+            }
+
+            double currentAllowance = 0;
+            try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
+                ResultSet allowanceRs = getAllowanceStmt.executeQuery();
+                if (allowanceRs.next()) {
+                    currentAllowance = allowanceRs.getDouble("allowance");
+                } else {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
+
+            if (transactionAmount > currentAllowance) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+            int categoryId = -1;
+            String categoryName = transaction.getTransactionCategory().getCategoryName();
+            try (PreparedStatement getCategoryIdStatement = connection.prepareStatement(categoryIdQuery)) {
+                getCategoryIdStatement.setString(1, categoryName);
+                ResultSet categoryResult = getCategoryIdStatement.executeQuery();
+                if (categoryResult.next()) {
+                    categoryId = categoryResult.getInt("category_id");
+                }
+            }
+
+            if (categoryId == -1) {
+                try (PreparedStatement insertCategoryStatement = connection.prepareStatement(insertCategoryQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertCategoryStatement.setString(1, categoryName);
+                    insertCategoryStatement.executeUpdate();
+                    ResultSet generatedKeys = insertCategoryStatement.getGeneratedKeys();
+                    generatedKeys.next();
+                    categoryId = (int) generatedKeys.getLong(1);
+                }
             }
 
             try (PreparedStatement updateAllowanceStmt = connection.prepareStatement(updateAllowanceQuery)) {
@@ -42,41 +89,26 @@ public class QuickEntry extends AbstractModel {
                 updateAllowanceStmt.executeUpdate();
             }
 
-            try (PreparedStatement studentStatement           = connection.prepareStatement(studentIdQuery);
-                 PreparedStatement getCategoryIdStatement     = connection.prepareStatement(categoryIdQuery);
-                 PreparedStatement insertCategoryStatement    = connection.prepareStatement(insertCategoryQuery, PreparedStatement.RETURN_GENERATED_KEYS);
-                 PreparedStatement insertTransactionStatement = connection.prepareStatement(insertTransactionQuery)) {
-
-                ResultSet studentResult = studentStatement.executeQuery();
-                if (studentResult.next()) {
-                    int studentId = studentResult.getInt("student_id");
-
-                    String categoryName = transaction.getTransactionCategory().getCategoryName();
-                    getCategoryIdStatement.setString(1, categoryName);
-                    ResultSet categoryResult = getCategoryIdStatement.executeQuery();
-
-                    int categoryId;
-                    if (categoryResult.next()) {
-                        categoryId = categoryResult.getInt("category_id");
-                    } else {
-                        insertCategoryStatement.setString(1, categoryName);
-                        insertCategoryStatement.executeUpdate();
-                        ResultSet generatedKeys = insertCategoryStatement.getGeneratedKeys();
-                        generatedKeys.next();
-                        categoryId = (int) generatedKeys.getLong(1);
-                    }
-
-                    insertTransactionStatement.setDouble(1, transactionAmount);
-                    insertTransactionStatement.setLong  (2, System.currentTimeMillis());
-                    insertTransactionStatement.setInt   (3, studentId);
-                    insertTransactionStatement.setInt   (4, categoryId);
-                    insertTransactionStatement.executeUpdate();
-
-                    return true;
-                }
+            try (PreparedStatement insertTransactionStatement = connection.prepareStatement(insertTransactionQuery)) {
+                insertTransactionStatement.setDouble(1, transactionAmount);
+                insertTransactionStatement.setLong  (2, transaction.getTransactionTimestamp());
+                insertTransactionStatement.setInt   (3, studentId);
+                insertTransactionStatement.setInt   (4, categoryId);
+                insertTransactionStatement.executeUpdate();
             }
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }

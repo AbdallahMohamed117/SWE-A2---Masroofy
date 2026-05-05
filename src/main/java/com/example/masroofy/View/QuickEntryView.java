@@ -31,6 +31,11 @@ public class QuickEntryView implements AbstractView {
 
     public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
 
+
+    public void setListener(QuickEntryListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void printScreen() {
         exitEditMode();
@@ -38,62 +43,7 @@ public class QuickEntryView implements AbstractView {
         newCategoryField.clear();
         selectedCategory = null;
         currentlySelectedTile = null;
-        if (categoryGrid != null) categoryGrid.getChildren().clear();
-    }
 
-    public void enterEditMode(Transaction transaction) {
-        isEditMode = true;
-        editingTransaction = transaction;
-        etAmountInput.setText(String.valueOf(transaction.getTransactionAmount()));
-        selectCategoryByName(transaction.getTransactionCategory().getCategoryName());
-        btnSubmitExpense.setText("UPDATE EXPENSE");
-    }
-
-    public void exitEditMode() {
-        isEditMode = false;
-        editingTransaction = null;
-        if (btnSubmitExpense != null) btnSubmitExpense.setText("CONFIRM EXPENSE");
-    }
-
-    private void selectCategoryByName(String categoryName) {
-        if (categoryGrid == null) return;
-        for (javafx.scene.Node node : categoryGrid.getChildren()) {
-            if (node instanceof VBox) {
-                VBox tile = (VBox) node;
-                if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
-                    Label label = (Label) tile.getChildren().get(0);
-                    if (categoryName.equals(label.getText())) {
-                        selectCategory(categoryName, tile);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    public void setListener(QuickEntryListener listener) {
-        this.listener = listener;
-    }
-
-    public String getAmountText()        { return etAmountInput.getText(); }
-    public String getSelectedCategory()  { return selectedCategory; }
-    public String getNewCategoryText()   { return newCategoryField.getText(); }
-    public void   clearNewCategory()     { if (newCategoryField != null) newCategoryField.clear(); }
-
-    public void showErrorMessage(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
-    }
-
-    public void showSavedConfirmation() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText("Expense saved successfully!");
-        alert.showAndWait();
     }
 
     public void showCategories(List<String> categories) {
@@ -136,6 +86,63 @@ public class QuickEntryView implements AbstractView {
         return tile;
     }
 
+    private void selectCategoryByName(String categoryName) {
+        if (categoryGrid == null) return;
+        for (javafx.scene.Node node : categoryGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox tile = (VBox) node;
+                if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
+                    Label label = (Label) tile.getChildren().get(0);
+                    if (categoryName.equals(label.getText())) {
+                        selectCategory(categoryName, tile);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void enterEditMode(Transaction transaction) {
+        isEditMode = true;
+        editingTransaction = transaction;
+        etAmountInput.setText(String.valueOf(transaction.getTransactionAmount()));
+        selectCategoryByName(transaction.getTransactionCategory().getCategoryName());
+        btnSubmitExpense.setText("UPDATE EXPENSE");
+    }
+
+    public void exitEditMode() {
+        isEditMode = false;
+        editingTransaction = null;
+        if (btnSubmitExpense != null) btnSubmitExpense.setText("CONFIRM EXPENSE");
+    }
+
+
+
+
+
+    public String getAmountText()        { return etAmountInput.getText(); }
+    public String getSelectedCategory()  { return selectedCategory; }
+    public String getNewCategoryText()   { return newCategoryField.getText(); }
+    public void   clearNewCategory()     { if (newCategoryField != null) newCategoryField.clear(); }
+
+    public void showErrorMessage(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    public void showSavedConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Expense saved successfully!");
+        alert.showAndWait();
+    }
+
+
+
     private void selectCategory(String categoryName, VBox tile) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle(
@@ -155,6 +162,15 @@ public class QuickEntryView implements AbstractView {
         currentlySelectedTile = tile;
     }
 
+    public void showUpdateConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Transaction updated successfully!");
+        alert.showAndWait();
+    }
+
+
     @FXML
     public void onBackClicked() {
         if (listener != null && listener.onBackClicked()) {
@@ -162,57 +178,22 @@ public class QuickEntryView implements AbstractView {
         }
     }
 
-    @FXML private void onSubmitExpense() {
+    @FXML
+    private void onSubmitExpense() {
+        String amountText = getAmountText();
+        String selectedCat = getSelectedCategory();
+
         if (isEditMode && editingTransaction != null) {
-            editingTransaction.setTransactionAmount(Double.parseDouble(getAmountText()));
-            Category c = new Category();
-            c.setCategoryName(getSelectedCategory());
-            editingTransaction.setTransactionCategory(c);
-            listener.onEditSubmitted(editingTransaction);
+            listener.onEditSubmitted(editingTransaction, amountText, selectedCat);
         } else {
-            String amountText = getAmountText();
-
-            if (amountText == null || amountText.isEmpty()) {
-                showErrorMessage("Please enter an amount.");
-                return;
-            }
-
-            double amount;
-            try {
-                amount = Double.parseDouble(amountText);
-            } catch (NumberFormatException e) {
-                showErrorMessage("Please enter a valid number.");
-                return;
-            }
-
-            if (amount <= 0) {
-                showErrorMessage("Amount must be greater than zero.");
-                return;
-            }
-
-            if (selectedCategory == null) {
-                showErrorMessage("Please select a category.");
-                return;
-            }
-
-            Category c = new Category();
-            c.setCategoryName(selectedCategory);
-            Transaction t = new Transaction();
-            t.setTransactionAmount(amount);
-            t.setTransactionCategory(c);
-            t.setTransactionTimestamp(System.currentTimeMillis());
-
-            listener.onSubmitExpense(t);
-            showSavedConfirmation();
+            listener.onSubmitExpense(amountText, selectedCat);
         }
     }
-
     @FXML
     private void onAddCategoryClicked() {
         listener.onAddCategoryClicked(getNewCategoryText());
     }
 
-    public void showUpdateConfirmation() {
-        System.out.println("Test");
-    }
 }
+
+

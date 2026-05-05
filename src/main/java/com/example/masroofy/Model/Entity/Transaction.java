@@ -7,6 +7,15 @@ public class Transaction {
     private Category transactionCategory;
     private long transactionTimestamp;
 
+    public Transaction(double transactionAmount, Category transactionCategory, long transactionTimestamp) {
+        this.transactionAmount = transactionAmount;
+        this.transactionCategory = transactionCategory;
+        this.transactionTimestamp = transactionTimestamp;
+    }
+    public Transaction(){
+
+    }
+
     public double getTransactionAmount() {
         return transactionAmount;
     }
