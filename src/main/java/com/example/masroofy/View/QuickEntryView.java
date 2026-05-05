@@ -120,7 +120,10 @@ public class QuickEntryView implements AbstractView {
     private VBox buildCategoryTile(String categoryName) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
-        tile.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+        tile.setStyle(
+                "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
+                        "-fx-background-radius: 12; -fx-cursor: hand;"
+        );
 
         Label label = new Label(categoryName);
         label.setFont(Font.font("System", 14));
@@ -135,11 +138,17 @@ public class QuickEntryView implements AbstractView {
 
     private void selectCategory(String categoryName, VBox tile) {
         if (currentlySelectedTile != null) {
-            currentlySelectedTile.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+            currentlySelectedTile.setStyle(
+                    "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
+                            "-fx-background-radius: 12; -fx-cursor: hand;"
+            );
             ((Label) currentlySelectedTile.getChildren().get(0)).setTextFill(Color.BLACK);
         }
 
-        tile.setStyle("-fx-background-color: #3b82f6; -fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;");
+        tile.setStyle(
+                "-fx-background-color: #3b82f6; -fx-padding: 12; " +
+                        "-fx-background-radius: 12; -fx-cursor: hand;"
+        );
         ((Label) tile.getChildren().get(0)).setTextFill(Color.WHITE);
 
         selectedCategory = categoryName;
@@ -161,18 +170,45 @@ public class QuickEntryView implements AbstractView {
             editingTransaction.setTransactionCategory(c);
             listener.onEditSubmitted(editingTransaction);
         } else {
-            double amount = Double.parseDouble(getAmountText());
+            String amountText = getAmountText();
+
+            if (amountText == null || amountText.isEmpty()) {
+                showErrorMessage("Please enter an amount.");
+                return;
+            }
+
+            double amount;
+            try {
+                amount = Double.parseDouble(amountText);
+            } catch (NumberFormatException e) {
+                showErrorMessage("Please enter a valid number.");
+                return;
+            }
+
+            if (amount <= 0) {
+                showErrorMessage("Amount must be greater than zero.");
+                return;
+            }
+
+            if (selectedCategory == null) {
+                showErrorMessage("Please select a category.");
+                return;
+            }
+
             Category c = new Category();
-            c.setCategoryName(getSelectedCategory());
+            c.setCategoryName(selectedCategory);
             Transaction t = new Transaction();
             t.setTransactionAmount(amount);
             t.setTransactionCategory(c);
             t.setTransactionTimestamp(System.currentTimeMillis());
+
             listener.onSubmitExpense(t);
+            showSavedConfirmation();
         }
     }
 
-    @FXML private void onAddCategoryClicked() {
+    @FXML
+    private void onAddCategoryClicked() {
         listener.onAddCategoryClicked(getNewCategoryText());
     }
 
