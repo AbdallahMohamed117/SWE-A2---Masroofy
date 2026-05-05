@@ -10,9 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 public class QuickEntryView implements AbstractView {
@@ -25,6 +22,10 @@ public class QuickEntryView implements AbstractView {
     private String selectedCategory = null;
     private VBox currentlySelectedTile = null;
     private QuickEntryListener listener;
+    private Runnable onNavigateBack;
+
+    public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
+
     @Override
     public void printScreen() {
         etAmountInput.clear();
@@ -103,7 +104,7 @@ public class QuickEntryView implements AbstractView {
         currentlySelectedTile = tile;
     }
 
-    @FXML private void onBackClicked() { }
+    @FXML private void onBackClicked() { if (onNavigateBack != null) onNavigateBack.run(); }
 
     @FXML private void onSubmitExpense() {
         double amount = Double.parseDouble(getAmountText());

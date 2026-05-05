@@ -43,7 +43,7 @@
                                 <Insets bottom="6.0" left="12.0" right="12.0" top="6.0" />
                             </padding>
                             <children>
-                                <Label fx:id="lblDaysLeft" text="12 days left" textFill="#10b981">
+                                <Label fx:id="lblDaysLeft" textFill="#10b981">
                                     <font><Font name="System Bold" size="10.0" /></font>
                                 </Label>
                             </children>
@@ -72,7 +72,7 @@
                                                         <Label text="SAFE DAILY LIMIT" textFill="#94a3b8">
                                                             <font><Font name="System Bold" size="9.0" /></font>
                                                         </Label>
-                                                        <Label fx:id="tvDailyLimit" text="EGP 66.67" textFill="#10b981">
+                                                        <Label fx:id="tvDailyLimit" textFill="#10b981">
                                                             <font><Font name="System Bold" size="28.0" /></font>
                                                         </Label>
                                                         <Label text="Safe to spend today" textFill="#64748b">
@@ -80,20 +80,20 @@
                                                         </Label>
                                                     </children>
                                                 </VBox>
-                                                <Label fx:id="lblStatusIcon" style="-fx-font-size: 24;" text="✅" />
+                                                <Label fx:id="lblStatusIcon" style="-fx-font-size: 24;" />
                                             </children>
                                         </HBox>
                                         <VBox spacing="6.0">
                                             <children>
-                                                <ProgressBar fx:id="progressBar" maxWidth="Infinity" prefHeight="6.0" progress="0.45" style="-fx-accent: #10b981;" />
+                                                 <ProgressBar fx:id="progressBar" maxWidth="Infinity" prefHeight="6.0" progress="0.0" style="-fx-accent: #10b981;" />
                                                 <HBox>
                                                     <children>
-                                                        <Label fx:id="lblSpent" text="Spent: EGP 30.00" textFill="#94a3b8">
+                                                        <Label fx:id="lblSpent" textFill="#94a3b8">
                                                             <font><Font size="10.0" /></font>
                                                         </Label>
                                                         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <Label fx:id="lblLimit" text="Limit: EGP 66.67" textFill="#94a3b8">
+                                                                <Label fx:id="lblLimit" textFill="#94a3b8">
                                                                     <font><Font size="10.0" /></font>
                                                                 </Label>
                                                             </children>
@@ -118,14 +118,14 @@
                                         <StackPane prefHeight="140.0">
                                             <children>
                                                 <Circle radius="55.0" stroke="#1e293b" strokeType="INSIDE" strokeWidth="10.0" style="-fx-fill: transparent;" />
-                                                <Circle radius="55.0" stroke="#10b981" strokeDashArray="180, 100" strokeType="INSIDE" strokeWidth="10.0" style="-fx-fill: transparent;" />
-                                                <Circle radius="55.0" stroke="#34d399" strokeDashArray="60, 400" strokeDashOffset="180" strokeType="INSIDE" strokeWidth="10.0" style="-fx-fill: transparent; -fx-opacity: 0.6;" />
+                                                <Circle fx:id="circleUsed" radius="55.0" stroke="#10b981" strokeType="INSIDE" strokeWidth="10.0" style="-fx-fill: transparent;" />
+                                                <Circle fx:id="circleRemaining" radius="55.0" stroke="#34d399" strokeType="INSIDE" strokeWidth="10.0" style="-fx-fill: transparent; -fx-opacity: 0.6;" />
                                                 <VBox alignment="CENTER" spacing="1.0">
                                                     <children>
                                                         <Label text="Total" textFill="#94a3b8">
                                                             <font><Font size="10.0" /></font>
                                                         </Label>
-                                                        <Label text="EGP" textFill="#94a3b8">
+                                                        <Label fx:id="lblPieChartTotal" textFill="#94a3b8">
                                                             <font><Font size="9.0" /></font>
                                                         </Label>
                                                     </children>

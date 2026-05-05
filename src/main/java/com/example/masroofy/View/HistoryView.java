@@ -1,13 +1,15 @@
 package com.example.masroofy.View;
 
+import com.example.masroofy.Listener.HistoryListener;
+import com.example.masroofy.Model.Entity.Transaction;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import com.example.masroofy.Model.Entity.Transaction;
-import com.example.masroofy.Listener.HistoryListener;
+
 public class HistoryView implements AbstractView {
 
     @FXML private Label totalExpensesLabel;
@@ -20,6 +22,9 @@ public class HistoryView implements AbstractView {
     @FXML private Button btnClearFilter;
 
     private HistoryListener listener;
+    private Runnable onNavigateBack;
+
+    public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
 
     @Override
     public void printScreen() {}
@@ -81,6 +86,7 @@ public class HistoryView implements AbstractView {
             }
         };
     }
+
     public void showTransactions(List<Transaction> list) {
         transactionListVBox.getChildren().clear();
 
@@ -160,10 +166,6 @@ public class HistoryView implements AbstractView {
         return new Date[] { from, now };
     }
 
-
-
-
-
     @FXML
     private void onClearFilterClicked() {
         categoryComboBox.getSelectionModel().clearSelection();
@@ -174,9 +176,7 @@ public class HistoryView implements AbstractView {
     }
 
     @FXML
-    public void onBackClicked() {
-
-    }
+    public void onBackClicked() { if (onNavigateBack != null) onNavigateBack.run(); }
 
     private HBox buildTransactionRow(Transaction t) {
         HBox row = new HBox(15);
@@ -217,12 +217,12 @@ public class HistoryView implements AbstractView {
     }
 
     private String getCategoryEmoji(String category) {
-        if (category == null) return "💰";
+        if (category == null) return "\ud83d\udcb0";
         switch (category.toLowerCase()) {
-            case "food": return "🍔";
-            case "transport": return "🚗";
-            case "entertainment": return "🎮";
-            default: return "💰";
+            case "food": return "\ud83c\udf54";
+            case "transport": return "\ud83d\ude97";
+            case "entertainment": return "\ud83c\udfae";
+            default: return "\ud83d\udcb0";
         }
     }
 
