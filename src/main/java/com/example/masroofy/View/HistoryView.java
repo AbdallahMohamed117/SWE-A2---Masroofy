@@ -43,6 +43,7 @@ public class HistoryView implements AbstractView {
         dateComboBox.getItems().addAll(dates);
     }
 
+    @FXML
     public void initialize() {
         styleComboBox(categoryComboBox, "Category");
         styleComboBox(dateComboBox, "Date");
@@ -176,7 +177,11 @@ public class HistoryView implements AbstractView {
     }
 
     @FXML
-    public void onBackClicked() { if (onNavigateBack != null) onNavigateBack.run(); }
+    public void onBackClicked() {
+        if (listener != null && listener.onBackClicked()) {
+            if (onNavigateBack != null) onNavigateBack.run();
+        }
+    }
 
     private HBox buildTransactionRow(Transaction t) {
         HBox row = new HBox(15);

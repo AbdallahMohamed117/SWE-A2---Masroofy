@@ -10,4 +10,5 @@ public interface HistoryListener {
     void onEditClicked(Transaction transaction);
     void onEditSubmitted(Transaction transaction);
     void onDeleteClicked(Transaction transaction);
+    boolean onBackClicked();
 }
