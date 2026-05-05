@@ -19,7 +19,6 @@ public class AppController {
     private SetupView setupView;
     private Parent dashboardRoot;
     private DashboardView dashboardView;
-    private DashboardController dashboardController;
     private Parent quickEntryRoot;
     private QuickEntryView quickEntryView;
     private Parent historyRoot;
@@ -102,8 +101,6 @@ public class AppController {
                 e.printStackTrace();
                 return;
             }
-        } else {
-            dashboardController.refreshDashboard();
         }
         dashboardView.setOnNavigateToQuickEntry(() -> navigateTo(Screen.QUICK_ENTRY));
         dashboardView.setOnNavigateToHistory(() -> navigateTo(Screen.HISTORY));
