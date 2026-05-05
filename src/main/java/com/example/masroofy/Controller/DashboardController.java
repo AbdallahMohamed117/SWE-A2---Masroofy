@@ -11,10 +11,14 @@ import java.util.Map;
 
 public class DashboardController implements AbstractController, DashboardListener {
 
+    private Dashboard model;
+    private DashboardView view;
+    private History historyModel;
+
     public DashboardController(Dashboard m, DashboardView v) {
         view = v;
         model = m;
-        hModel = new History();
+        historyModel = new History();
         view.setListener(this);
         PrintView();
     }
@@ -32,7 +36,7 @@ public class DashboardController implements AbstractController, DashboardListene
             return;
         }
 
-        List<Transaction> amounts = hModel.getTransactions();
+        List<Transaction> amounts = historyModel.getTransactions();
 
         double totalSpent = 0;
         Map<String, Double> piechart = new HashMap<>();
@@ -60,10 +64,6 @@ public class DashboardController implements AbstractController, DashboardListene
 
         view.printScreen();
     }
-
-    private Dashboard model;
-    private DashboardView view;
-    private History hModel;
 
     @Override
     public void onLogExpenseClicked() {

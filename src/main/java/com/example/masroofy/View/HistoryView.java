@@ -26,6 +26,12 @@ public class HistoryView implements AbstractView {
 
     public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
 
+    public interface EditHandler {
+        void onEdit(Transaction transaction, javafx.scene.Scene scene);
+    }
+    private EditHandler editHandler;
+    public void setEditHandler(EditHandler h) { this.editHandler = h; }
+
     @Override
     public void printScreen() {}
 
@@ -138,7 +144,9 @@ public class HistoryView implements AbstractView {
     }
 
     public void showEditForm(Transaction transaction) {
-
+        if (editHandler != null) {
+            editHandler.onEdit(transaction, transactionListVBox.getScene());
+        }
     }
 
     @FXML
