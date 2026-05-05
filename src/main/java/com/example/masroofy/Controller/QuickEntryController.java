@@ -16,21 +16,41 @@ public class QuickEntryController implements AbstractController, QuickEntryListe
     }
     @Override
     public void PrintView() {
-        view.showCategories(model.getCategories());
+        view.showCategoriesFromCategoryList(model.getCategories());
     }
 
 
 
     @Override
     public void onSubmitExpense(Transaction transaction) {
-        model.addTransaction(transaction);
+        boolean success = model.addTransaction(transaction);
+        if (success) {
+            view.showSavedConfirmation();
+            view.printScreen();
+        } else {
+            view.showErrorMessage("Transaction amount exceeds your remaining allowance!");
+        }
+    }
+
+    @Override
+    public void onEditSubmitted(Transaction transaction) {
     }
 
     @Override
     public void onAddCategoryClicked(String category) {
+        if (category == null || category.trim().isEmpty()) {
+            view.showErrorMessage("Category name cannot be empty!");
+            return;
+        }
         Category newCategory = new Category();
         newCategory.setCategoryName(category);
-        model.addCategory(newCategory);
+        boolean success = model.addCategory(newCategory);
+        if (success) {
+            view.clearNewCategory();
+            view.showCategoriesFromCategoryList(model.getCategories());
+        } else {
+            view.showErrorMessage("Category already exists!");
+        }
     }
 
     @Override

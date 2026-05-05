@@ -60,8 +60,59 @@ public class History extends AbstractModel {
     }
 
     public boolean editTransaction(Transaction transaction) {
+        String getOldTransactionQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
+        String getAllowanceQuery = "SELECT allowance FROM Budget";
+        String updateAllowanceQuery = "UPDATE Budget SET allowance = allowance - ?";
+        String addAllowanceQuery = "UPDATE Budget SET allowance = allowance + ?";
         String categoryIdQuery = "SELECT category_id FROM Category WHERE category_name = ?";
         String updateTransactionQuery = "UPDATE Transactions SET transaction_amount = ?, category_id = ? WHERE transaction_timestamp = ?";
+
+        double oldAmount = 0;
+        try (PreparedStatement getOldStmt = connection.prepareStatement(getOldTransactionQuery)) {
+            getOldStmt.setLong(1, transaction.getTransactionTimestamp());
+            ResultSet oldRs = getOldStmt.executeQuery();
+            if (oldRs.next()) {
+                oldAmount = oldRs.getDouble("transaction_amount");
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        double newAmount = transaction.getTransactionAmount();
+        double delta = newAmount - oldAmount;
+
+        if (delta > 0) {
+            try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
+                ResultSet allowanceRs = getAllowanceStmt.executeQuery();
+                double currentAllowance = 0;
+                if (allowanceRs.next()) {
+                    currentAllowance = allowanceRs.getDouble("allowance");
+                } else {
+                    return false;
+                }
+                if (delta > currentAllowance) {
+                    return false;
+                }
+                try (PreparedStatement updateAllowanceStmt = connection.prepareStatement(updateAllowanceQuery)) {
+                    updateAllowanceStmt.setDouble(1, delta);
+                    updateAllowanceStmt.executeUpdate();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else if (delta < 0) {
+            try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
+                addAllowanceStmt.setDouble(1, Math.abs(delta));
+                addAllowanceStmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
 
         try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery);
              PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery))
@@ -71,7 +122,7 @@ public class History extends AbstractModel {
             if (categoryResult.next()) {
                 int categoryId = categoryResult.getInt("category_id");
 
-                updateTransactionStatement.setDouble(1, transaction.getTransactionAmount());
+                updateTransactionStatement.setDouble(1, newAmount);
                 updateTransactionStatement.setInt   (2, categoryId);
                 updateTransactionStatement.setLong  (3, transaction.getTransactionTimestamp());
 

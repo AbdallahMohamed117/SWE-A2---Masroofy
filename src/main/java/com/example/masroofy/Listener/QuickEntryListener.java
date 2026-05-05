@@ -4,6 +4,7 @@ import com.example.masroofy.Model.Entity.Transaction;
 
 public interface QuickEntryListener {
     void onSubmitExpense(Transaction transaction);
+    void onEditSubmitted(Transaction transaction);
     void onAddCategoryClicked(String category);
     boolean onBackClicked();
 }

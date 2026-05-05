@@ -6,7 +6,7 @@ public enum Screen {
     SETUP("Setup", "/com/example/masroofy/View/SetupView.fxml", 400, 700),
     DASHBOARD("Dashboard", "/com/example/masroofy/View/DashboardView.fxml", 380, 700),
     QUICK_ENTRY("QuickEntry", "/com/example/masroofy/View/QuickEntry.fxml", 400, 700),
-    HISTORY("History", "/com/example/masroofy/View/HistoryView.fxml", 400, 700);
+    HISTORY("History", "/com/example/masroofy/View/HistoryView.fxml", 600, 700);
 
     private final String name;
     private final String fxmlPath;
