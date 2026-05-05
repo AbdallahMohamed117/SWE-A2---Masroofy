@@ -32,4 +32,9 @@ public class QuickEntryController implements AbstractController, QuickEntryListe
         newCategory.setCategoryName(category);
         model.addCategory(newCategory);
     }
+
+    @Override
+    public boolean onBackClicked() {
+        return true;
+    }
 }

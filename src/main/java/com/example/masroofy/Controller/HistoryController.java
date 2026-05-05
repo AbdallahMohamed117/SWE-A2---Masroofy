@@ -57,4 +57,9 @@ public class HistoryController implements AbstractController, HistoryListener {
 
     }
 
+    @Override
+    public boolean onBackClicked() {
+        return true;
+    }
+
 }

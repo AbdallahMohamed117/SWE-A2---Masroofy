@@ -14,7 +14,11 @@ public class AppView {
     public void switchTo(Parent root, Screen screen) {
         primaryStage.setWidth(screen.getWidth());
         primaryStage.setHeight(screen.getHeight());
-        Scene scene = new Scene(root, screen.getWidth(), screen.getHeight());
-        primaryStage.setScene(scene);
+        Scene currentScene = primaryStage.getScene();
+        if (currentScene != null) {
+            currentScene.setRoot(root);
+        } else {
+            primaryStage.setScene(new Scene(root, screen.getWidth(), screen.getHeight()));
+        }
     }
 }

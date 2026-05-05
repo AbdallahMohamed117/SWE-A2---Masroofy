@@ -104,7 +104,12 @@ public class QuickEntryView implements AbstractView {
         currentlySelectedTile = tile;
     }
 
-    @FXML private void onBackClicked() { if (onNavigateBack != null) onNavigateBack.run(); }
+    @FXML
+    public void onBackClicked() {
+        if (listener != null && listener.onBackClicked()) {
+            if (onNavigateBack != null) onNavigateBack.run();
+        }
+    }
 
     @FXML private void onSubmitExpense() {
         double amount = Double.parseDouble(getAmountText());
