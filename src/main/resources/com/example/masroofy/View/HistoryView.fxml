@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.masroofy.View.HistoryView">
+<AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.HistoryView">
     <stylesheets>
         <URL value="@history.css" />
     </stylesheets>
@@ -17,9 +20,7 @@
         <Circle fill="#0ea5e9" layoutX="350.0" layoutY="80.0" radius="80.0" style="-fx-opacity: 0.12;" />
         <Circle fill="#6366f1" layoutX="50.0" layoutY="600.0" radius="90.0" style="-fx-opacity: 0.08;" />
 
-        <VBox layoutX="25.0" layoutY="30.0" prefHeight="690.0" prefWidth="450.0" spacing="20.0"
-              style="-fx-background-color: rgba(255, 255, 255, 0.03); -fx-background-radius: 30;
-                     -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-width: 1; -fx-border-radius: 30;">
+        <VBox layoutX="7.0" layoutY="30.0" prefHeight="690.0" prefWidth="488.0" spacing="20.0" style="-fx-background-color: rgba(255, 255, 255, 0.03); -fx-background-radius: 30;                      -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-width: 1; -fx-border-radius: 30;">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="25.0" />
             </padding>
@@ -28,9 +29,7 @@
                 <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Button onAction="#onBackClicked"
-                                style="-fx-background-color: rgba(255,255,255,0.05);
-                                       -fx-text-fill: white; -fx-background-radius: 10;" text="←" />
+                        <Button onAction="#onBackClicked" style="-fx-background-color: rgba(255,255,255,0.05);                                        -fx-text-fill: white; -fx-background-radius: 10;" text="←" />
                         <Label text="History" textFill="WHITE">
                             <font><Font name="System Bold" size="22.0" /></font>
                         </Label>
@@ -38,56 +37,30 @@
                 </HBox>
 
                 <!-- Filters -->
-                <HBox spacing="10.0">
+                <HBox prefHeight="55.0" prefWidth="540.0" spacing="10.0">
                     <children>
-                        <ComboBox fx:id="categoryComboBox" promptText="Category"
-                                  style="-fx-background-color: rgba(255,255,255,0.05);
-                                         -fx-background-radius: 12;
-                                         -fx-border-color: rgba(255,255,255,0.1);
-                                         -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;"
-                                  HBox.hgrow="ALWAYS" />
-                        <ComboBox fx:id="dateComboBox" promptText="Date"
-                                  style="-fx-background-color: rgba(255,255,255,0.05);
-                                         -fx-background-radius: 12;
-                                         -fx-border-color: rgba(255,255,255,0.1);
-                                         -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;"
-                                  HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnApplyFilter" onAction="#onApplyFilterClicked"
-                                style="-fx-background-color: #0d9488; -fx-text-fill: white;
-                                       -fx-background-radius: 12; -fx-padding: 8 20;
-                                       -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;"
-                                text="Apply" />
-                        <Button fx:id="btnClearFilter" onAction="#onClearFilterClicked"
-                                style="-fx-background-color: rgba(255,255,255,0.08);
-                                       -fx-text-fill: #cbd5e1; -fx-background-radius: 12;
-                                       -fx-padding: 8 20; -fx-font-weight: bold;
-                                       -fx-font-size: 13; -fx-cursor: hand;" text="Clear" />
+                        <ComboBox fx:id="categoryComboBox" promptText="Category" style="-fx-background-color: rgba(255,255,255,0.05);                                          -fx-background-radius: 12;                                          -fx-border-color: rgba(255,255,255,0.1);                                          -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="dateComboBox" promptText="Date" style="-fx-background-color: rgba(255,255,255,0.05);                                          -fx-background-radius: 12;                                          -fx-border-color: rgba(255,255,255,0.1);                                          -fx-border-radius: 12; -fx-padding: 4 12; -fx-cursor: hand;" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnApplyFilter" onAction="#onApplyFilterClicked" style="-fx-background-color: #0d9488; -fx-text-fill: white;                                        -fx-background-radius: 12; -fx-padding: 8 20;                                        -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;" text="Apply" />
+                        <Button fx:id="btnClearFilter" onAction="#onClearFilterClicked" prefHeight="35.0" prefWidth="79.0" style="-fx-background-color: rgba(255,255,255,0.08);                                        -fx-text-fill: #cbd5e1; -fx-background-radius: 12;                                        -fx-padding: 8 20; -fx-font-weight: bold;                                        -fx-font-size: 13; -fx-cursor: hand;" text="Clear" />
                     </children>
                 </HBox>
 
                 <!-- Summary Card -->
-                <VBox spacing="5.0"
-                      style="-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 20;
-                             -fx-padding: 20; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 20;">
+                <VBox spacing="5.0" style="-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 20;                              -fx-padding: 20; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 20;">
                     <children>
                         <HBox alignment="CENTER">
                             <children>
                                 <VBox HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label style="-fx-font-size: 10; -fx-letter-spacing: 1;"
-                                               text="TOTAL EXPENSES" textFill="#94a3b8" />
-                                        <Label fx:id="totalExpensesLabel"
-                                               style="-fx-font-weight: bold; -fx-font-size: 24;"
-                                               text="EGP 0.00" textFill="#2dd4bf" />
+                                        <Label style="-fx-font-size: 10; -fx-letter-spacing: 1;" text="TOTAL EXPENSES" textFill="#94a3b8" />
+                                        <Label fx:id="totalExpensesLabel" style="-fx-font-weight: bold; -fx-font-size: 24;" text="EGP 0.00" textFill="#2dd4bf" />
                                     </children>
                                 </VBox>
                                 <VBox alignment="CENTER_RIGHT">
                                     <children>
-                                        <Label style="-fx-font-size: 10;" text="TRANSACTIONS"
-                                               textFill="#94a3b8" />
-                                        <Label fx:id="transactionCountLabel"
-                                               style="-fx-font-weight: bold; -fx-font-size: 24;"
-                                               text="0" textFill="WHITE" />
+                                        <Label style="-fx-font-size: 10;" text="TRANSACTIONS" textFill="#94a3b8" />
+                                        <Label fx:id="transactionCountLabel" style="-fx-font-weight: bold; -fx-font-size: 24;" text="0" textFill="WHITE" />
                                     </children>
                                 </VBox>
                             </children>
@@ -95,16 +68,12 @@
                     </children>
                 </VBox>
 
-                <Label style="-fx-font-weight: bold; -fx-font-size: 13;"
-                       text="Recent Activities" textFill="#64748b" />
+                <Label style="-fx-font-weight: bold; -fx-font-size: 13;" text="Recent Activities" textFill="#64748b" />
 
                 <!-- Transaction List -->
-                <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-                            style="-fx-background: transparent; -fx-background-color: transparent;
-                                   -fx-padding: 0;" VBox.vgrow="ALWAYS">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent;                                    -fx-padding: 0;" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox fx:id="transactionListVBox" spacing="12.0"
-                              style="-fx-background-color: transparent;">
+                        <VBox fx:id="transactionListVBox" spacing="12.0" style="-fx-background-color: transparent;">
                         </VBox>
                     </content>
                 </ScrollPane>
