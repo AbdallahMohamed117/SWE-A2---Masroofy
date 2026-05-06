@@ -28,12 +28,13 @@ public class DashboardView implements AbstractView {
     @FXML private Circle circleRemaining;
     @FXML private VBox categoryContainer;
     @FXML private VBox dailyLimitCard;
-
+    @FXML private Label btnSettings;
     private VBox alertBanner;
 
     private DashboardListener listener;
     private Runnable onNavigateToQuickEntry;
     private Runnable onNavigateToHistory;
+    private Runnable onNavigateToSettings;
     private double dailyLimit;
     private double totalSpent;
     private Map<String, Double> categoryData;
@@ -64,6 +65,12 @@ public class DashboardView implements AbstractView {
         }
     }
 
+    public void setOnNavigateToSettings(Runnable r) {
+        this.onNavigateToSettings = r;
+        if (btnSettings != null) {
+            btnSettings.setOnMouseClicked(e -> onNavigateToSettings.run());
+        }
+    }
     public void showSafeDailyLimit() {
         tvDailyLimit.setText("EGP " + String.format("%.2f", dailyLimit));
         lblSpent.setText("Spent: EGP " + String.format("%.2f", totalSpent));

@@ -96,11 +96,23 @@ public class QuickEntryView implements AbstractView {
 
         Label label = new Label(categoryName);
         label.setFont(Font.font("System", 14));
+        label.setTextFill(Color.web("#38bdf8"));
         label.setWrapText(true);
         label.setAlignment(Pos.CENTER);
         label.setTextFill(Color.WHITE);
 
         tile.getChildren().add(label);
+
+        tile.setOnMouseEntered(e -> {
+            if (tile != currentlySelectedTile) {
+                tile.setStyle(
+                        "-fx-background-color: rgba(14, 165, 233, 0.25);" +
+                                "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                                "-fx-border-color: rgba(14, 165, 233, 0.5); -fx-border-radius: 12;" +
+                                "-fx-translate-y: -2;"
+                );
+            }
+        });
 
         tile.setOnMouseClicked(e -> selectCategory(categoryName, tile, color));
         return tile;
@@ -109,10 +121,15 @@ public class QuickEntryView implements AbstractView {
     private void selectCategory(String categoryName, VBox tile, String color) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle(
-                    "-fx-background-color: " + currentlySelectedColor + "; -fx-padding: 12; " +
-                            "-fx-background-radius: 12; -fx-cursor: hand; -fx-opacity: 1.0;"
+                    "-fx-background-color: rgba(14, 165, 233, 0.15);" +
+                            "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                            "-fx-border-color: rgba(14, 165, 233, 0.3); -fx-border-radius: 12;"
             );
+            ((Label) currentlySelectedTile.getChildren().get(0))
+                    .setTextFill(Color.web("#38bdf8"));
         }
+
+
 
         tile.setStyle(
                 "-fx-background-color: " + color + "; -fx-padding: 12; " +

@@ -1,12 +1,13 @@
 package com.example.masroofy.App;
 
 public enum Screen {
-    SPLASH("Splash", "/com/example/masroofy/App/SplashView.fxml", 480, 700),
-    PIN("Pin", "/com/example/masroofy/View/PinView.fxml", 480, 700),
-    SETUP("Setup", "/com/example/masroofy/View/SetupView.fxml", 480, 700),
-    DASHBOARD("Dashboard", "/com/example/masroofy/View/DashboardView.fxml", 480, 700),
-    QUICK_ENTRY("QuickEntry", "/com/example/masroofy/View/QuickEntry.fxml", 480, 700),
-    HISTORY("History", "/com/example/masroofy/View/HistoryView.fxml", 500, 700);
+    SPLASH("Splash", "/com/example/masroofy/App/SplashView.fxml", 500, 750),
+    PIN("Pin", "/com/example/masroofy/View/PinView.fxml", 500, 750),
+    SETUP("Setup", "/com/example/masroofy/View/SetupView.fxml", 500, 750),
+    DASHBOARD("Dashboard", "/com/example/masroofy/View/DashboardView.fxml", 500, 750),
+    QUICK_ENTRY("QuickEntry", "/com/example/masroofy/View/QuickEntry.fxml", 500, 750),
+    HISTORY("History", "/com/example/masroofy/View/HistoryView.fxml", 500, 750),
+    SETTINGS("Settings", "/com/example/masroofy/View/SettingsView.fxml", 500, 750);
 
     private final String name;
     private final String fxmlPath;

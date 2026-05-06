@@ -25,7 +25,7 @@ public class SplashView {
 
     public Parent createRoot() {
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(400, 650);
+        root.setPrefSize(500, 750);
         root.setStyle("-fx-background-color: #0f172a;");
 
         Circle bgCircle1 = new Circle(350, 80, 120, Color.web("#0ea5e9", 0.1));
@@ -34,10 +34,11 @@ public class SplashView {
 
         VBox container = new VBox(15);
         container.setAlignment(Pos.CENTER);
-        container.setPadding(new Insets(40, 25, 30, 25));
+        container.setPadding(new Insets(10, 10, 10, 10));
         container.setLayoutX(30);
         container.setLayoutY(34);
-        container.setPrefWidth(340);
+        container.setPrefWidth(440);
+        container.setPrefHeight(670);
         container.setStyle(
             "-fx-background-color: rgba(255, 255, 255, 0.03);" +
             "-fx-background-radius: 30;" +

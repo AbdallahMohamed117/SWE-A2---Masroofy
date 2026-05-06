@@ -10,112 +10,126 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.effect.DropShadow?>
 
-<AnchorPane prefHeight="650.0" prefWidth="400.0" style="-fx-background-color: #0f172a;"
+<AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;"
             xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.masroofy.View.PinView">
     <children>
-        <Circle fill="#0ea5e9" layoutX="332.0" layoutY="94.0" radius="86.0" style="-fx-opacity: 0.15;" />
-        <Circle fill="#6366f1" layoutX="57.0" layoutY="584.0" radius="100.0" style="-fx-opacity: 0.1;" />
+        <Circle fill="#0ea5e9" layoutX="430.0" layoutY="94.0" radius="86.0" style="-fx-opacity: 0.15;" />
+        <Circle fill="#6366f1" layoutX="57.0" layoutY="680.0" radius="100.0" style="-fx-opacity: 0.1;" />
 
-        <VBox alignment="TOP_CENTER" layoutX="35.0" layoutY="45.0" prefHeight="560.0" prefWidth="330.0" spacing="30.0"
-              style="-fx-background-color: rgba(255, 255, 255, 0.04); -fx-background-radius: 40;
-                     -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-width: 1; -fx-border-radius: 40;">
-            <padding>
-                <Insets bottom="30.0" left="25.0" right="25.0" top="45.0" />
-            </padding>
+        <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-
-                <VBox alignment="CENTER" spacing="10.0">
+                <VBox alignment="TOP_CENTER" maxWidth="420.0" spacing="25.0"
+                      style="-fx-background-color: rgba(255, 255, 255, 0.04);
+                             -fx-background-radius: 40;
+                             -fx-border-color: rgba(255, 255, 255, 0.1);
+                             -fx-border-width: 1; -fx-border-radius: 40;">
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                    </padding>
                     <children>
-                        <Label style="-fx-font-size: 45;" text="👤" />
-                        <Label text="Security PIN" textFill="WHITE">
-                            <font><Font name="System Bold" size="26.0" /></font>
-                        </Label>
-                        <Label text="Please enter your access code" textFill="#94a3b8">
-                            <font><Font size="13.0" /></font>
-                        </Label>
+
+                        <VBox alignment="CENTER" spacing="10.0">
+                            <children>
+                                <Label style="-fx-font-size: 45;" text="👤" />
+                                <Label text="Security PIN" textFill="WHITE">
+                                    <font><Font name="System Bold" size="26.0" /></font>
+                                </Label>
+                                <Label text="Please enter your access code" textFill="#94a3b8">
+                                    <font><Font size="13.0" /></font>
+                                </Label>
+                            </children>
+                        </VBox>
+
+                        <HBox alignment="CENTER" spacing="20.0">
+                            <children>
+                                <Circle fx:id="pinDot1" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
+                                <Circle fx:id="pinDot2" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
+                                <Circle fx:id="pinDot3" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
+                                <Circle fx:id="pinDot4" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
+                            </children>
+                        </HBox>
+
+                        <GridPane alignment="CENTER" hgap="15.0" vgap="15.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <children>
+                                <Button text="1" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Button text="2" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <Button text="3" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                <Button text="4" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Button text="5" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Button text="6" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Button text="7" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <Button text="8" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <Button text="9" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                <Button text="0" onAction="#onDigitClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
+                                               -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                                               -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <Button text="⌫" onAction="#onDeleteClicked" prefHeight="65.0" prefWidth="65.0"
+                                        style="-fx-background-color: transparent; -fx-text-fill: #94a3b8;
+                                               -fx-font-size: 22; -fx-cursor: hand;"
+                                        GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                            </children>
+                        </GridPane>
+
+                        <Button fx:id="btnSubmitPin" maxWidth="Infinity" prefHeight="55.0"
+                                onAction="#onSubmitPin"
+                                style="-fx-background-color: #38bdf8; -fx-background-radius: 15;
+                                       -fx-text-fill: #0f172a; -fx-font-weight: bold;
+                                       -fx-font-size: 15; -fx-cursor: hand;" text="UNLOCK NOW">
+                            <VBox.margin><Insets top="10.0" /></VBox.margin>
+                            <effect>
+                                <DropShadow color="#38bdf844" radius="15" />
+                            </effect>
+                        </Button>
+
                     </children>
                 </VBox>
-
-                <!-- PIN Dots -->
-                <HBox alignment="CENTER" spacing="20.0">
-                    <children>
-                        <Circle fx:id="pinDot1" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
-                        <Circle fx:id="pinDot2" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
-                        <Circle fx:id="pinDot3" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
-                        <Circle fx:id="pinDot4" fill="#1e293b" radius="8.0" stroke="TRANSPARENT" />
-                    </children>
-                </HBox>
-
-                <!-- Keypad -->
-                <GridPane alignment="CENTER" hgap="15.0" vgap="15.0">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <children>
-                        <Button text="1" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <Button text="2" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                        <Button text="3" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="2" GridPane.rowIndex="0" />
-
-                        <Button text="4" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Button text="5" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button text="6" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="2" GridPane.rowIndex="1" />
-
-                        <Button text="7" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Button text="8" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button text="9" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="2" GridPane.rowIndex="2" />
-
-                        <Button text="0" onAction="#onDigitClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 50;
-                                       -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
-                                       -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 50; -fx-cursor: hand;"
-                                GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Button text="⌫" onAction="#onDeleteClicked" prefHeight="60.0" prefWidth="60.0"
-                                style="-fx-background-color: transparent; -fx-text-fill: #94a3b8;
-                                       -fx-font-size: 22; -fx-cursor: hand;"
-                                GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                    </children>
                 </GridPane>
 
                 <!-- Submit Button -->

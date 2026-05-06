@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 public class AppController {
     private final AppModel model;
     private final AppView appView;
+    private Parent settingsRoot;
+    private SettingsView settingsView;
 
     private Parent splashRoot;
     private SplashView splashView;
@@ -43,9 +45,24 @@ public class AppController {
             case DASHBOARD: showDashboard(); break;
             case QUICK_ENTRY: showQuickEntry(); break;
             case HISTORY: showHistory(); break;
+            case SETTINGS: showSettings(); break;
         }
     }
-
+    private void showSettings() {
+        if (settingsView == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(Screen.SETTINGS.getFxmlPath()));
+                settingsRoot = loader.load();
+                settingsView = loader.getController();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        settingsView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
+        settingsView.setOnNavigateToSetup(() -> navigateTo(Screen.SETUP));
+        appView.switchTo(settingsRoot, Screen.SETTINGS);
+    }
     private void showSplash() {
         if (splashView == null) {
             splashView = new SplashView();
@@ -110,8 +127,10 @@ public class AppController {
         }
         dashboardView.setOnNavigateToQuickEntry(() -> navigateTo(Screen.QUICK_ENTRY));
         dashboardView.setOnNavigateToHistory(() -> navigateTo(Screen.HISTORY));
+        dashboardView.setOnNavigateToSettings(() -> navigateTo(Screen.SETTINGS));
         dashboardController.refreshDashboard();
         appView.switchTo(dashboardRoot, Screen.DASHBOARD);
+
     }
 
     private void showQuickEntry() {

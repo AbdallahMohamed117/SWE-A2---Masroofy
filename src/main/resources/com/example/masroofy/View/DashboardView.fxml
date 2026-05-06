@@ -7,6 +7,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
+<AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.DashboardView">
 <AnchorPane prefHeight="700.0" prefWidth="380.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.DashboardView">
 
     <children>
@@ -149,6 +150,13 @@
                 </ScrollPane>
 
                 <!-- Bottom Navigation -->
+                <HBox alignment="CENTER" prefHeight="65.0" spacing="60.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;">
+                    <children>
+                        <Label style="-fx-font-size: 20;" text="🏠" textFill="#10b981" />
+                        <Label style="-fx-font-size: 20; -fx-opacity: 0.4;" text="📊" textFill="WHITE" />
+                        <Label fx:id="btnSettings" style="-fx-font-size: 20; -fx-opacity: 0.4; -fx-cursor: hand;" text="⚙️" textFill="WHITE" />
+                    </children>
+                </HBox>
                 <HBox alignment="CENTER" prefHeight="0.0" prefWidth="410.0" spacing="60.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;" />
 
             </children>
