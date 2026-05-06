@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="750.0" prefWidth="500.0"
+            style="-fx-background-color: #0f172a;"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.masroofy.View.SettingsView">
+    <children>
+        <Circle fill="#6366f1" layoutX="430.0" layoutY="80.0" radius="100.0" style="-fx-opacity: 0.1;" />
+        <Circle fill="#0d9488" layoutX="50.0" layoutY="680.0" radius="120.0" style="-fx-opacity: 0.08;" />
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;"
+                    vbarPolicy="AS_NEEDED"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <content>
+                <VBox spacing="20.0">
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                    </padding>
+                    <children>
+
+                        <!-- Header -->
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <children>
+                                <Button onAction="#onBackClicked"
+                                        style="-fx-background-color: transparent;
+                                               -fx-text-fill: white; -fx-font-size: 18;
+                                               -fx-cursor: hand;" text="←" />
+                                <Label text="Settings" textFill="WHITE">
+                                    <font><Font name="System Bold" size="22.0" /></font>
+                                </Label>
+                            </children>
+                        </HBox>
+
+                        <!-- Change PIN Section -->
+                        <VBox spacing="12.0"
+                              style="-fx-background-color: rgba(255,255,255,0.04);
+                                     -fx-background-radius: 20;
+                                     -fx-border-color: rgba(255,255,255,0.08);
+                                     -fx-border-radius: 20; -fx-padding: 20;">
+                            <children>
+                                <Label text="🔐  Change PIN" textFill="WHITE">
+                                    <font><Font name="System Bold" size="15.0" /></font>
+                                </Label>
+                                <Label text="Current PIN" textFill="#94a3b8">
+                                    <font><Font size="12.0" /></font>
+                                </Label>
+                                <TextField fx:id="etCurrentPin" promptText="Enter current PIN"
+                                           style="-fx-background-color: rgba(255,255,255,0.05);
+                                                  -fx-background-radius: 12;
+                                                  -fx-border-color: rgba(255,255,255,0.1);
+                                                  -fx-border-radius: 12;
+                                                  -fx-text-fill: white; -fx-padding: 10;" />
+                                <Label text="New PIN" textFill="#94a3b8">
+                                    <font><Font size="12.0" /></font>
+                                </Label>
+                                <TextField fx:id="etNewPin" promptText="Enter new PIN"
+                                           style="-fx-background-color: rgba(255,255,255,0.05);
+                                                  -fx-background-radius: 12;
+                                                  -fx-border-color: rgba(255,255,255,0.1);
+                                                  -fx-border-radius: 12;
+                                                  -fx-text-fill: white; -fx-padding: 10;" />
+                                <Label fx:id="tvPinError" textFill="#fb7185"
+                                       visible="false" wrapText="true">
+                                    <font><Font name="System Italic" size="12.0" /></font>
+                                </Label>
+                                <Button fx:id="btnChangePin" maxWidth="Infinity"
+                                        prefHeight="45.0" onAction="#onChangePinClicked"
+                                        style="-fx-background-color: #6366f1;
+                                               -fx-background-radius: 12;
+                                               -fx-text-fill: white;
+                                               -fx-font-weight: bold;
+                                               -fx-cursor: hand;" text="CHANGE PIN">
+                                    <effect><DropShadow color="#6366f144" radius="10" /></effect>
+                                </Button>
+                            </children>
+                        </VBox>
+
+                        <!-- Clear Cycle Section -->
+                        <VBox spacing="12.0"
+                              style="-fx-background-color: rgba(255,255,255,0.04);
+                                     -fx-background-radius: 20;
+                                     -fx-border-color: rgba(255,255,255,0.08);
+                                     -fx-border-radius: 20; -fx-padding: 20;">
+                            <children>
+                                <Label text="🔄  Start Over" textFill="WHITE">
+                                    <font><Font name="System Bold" size="15.0" /></font>
+                                </Label>
+                                <Label text="This will delete all your current cycle data and start fresh."
+                                       textFill="#94a3b8" wrapText="true">
+                                    <font><Font size="12.0" /></font>
+                                </Label>
+                                <Label fx:id="tvClearError" textFill="#fb7185"
+                                       visible="false" wrapText="true">
+                                    <font><Font name="System Italic" size="12.0" /></font>
+                                </Label>
+                                <Button fx:id="btnClearCycle" maxWidth="Infinity"
+                                        prefHeight="45.0" onAction="#onClearCycleClicked"
+                                        style="-fx-background-color: #ef4444;
+                                               -fx-background-radius: 12;
+                                               -fx-text-fill: white;
+                                               -fx-font-weight: bold;
+                                               -fx-cursor: hand;" text="CLEAR CYCLE &amp; START OVER">
+                                    <effect><DropShadow color="#ef444444" radius="10" /></effect>
+                                </Button>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

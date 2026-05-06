@@ -9,16 +9,17 @@ public class AppView {
 
     public AppView(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
     }
 
     public void switchTo(Parent root, Screen screen) {
-        primaryStage.setWidth(screen.getWidth());
-        primaryStage.setHeight(screen.getHeight());
         Scene currentScene = primaryStage.getScene();
         if (currentScene != null) {
             currentScene.setRoot(root);
         } else {
             primaryStage.setScene(new Scene(root, screen.getWidth(), screen.getHeight()));
         }
+        primaryStage.sizeToScene();
+        primaryStage.centerOnScreen();
     }
 }

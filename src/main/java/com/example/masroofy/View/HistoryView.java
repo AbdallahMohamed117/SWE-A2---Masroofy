@@ -33,6 +33,7 @@ public class HistoryView implements AbstractView {
     @Override
     public void printScreen() {}
 
+    public void setListener(HistoryListener l) { listener = l; }
     @FXML
     public void initialize() {
         styleComboBox(categoryComboBox, "Category");
@@ -86,7 +87,7 @@ public class HistoryView implements AbstractView {
                     setText(item);
                     setStyle("-fx-text-fill: white; -fx-font-size: 13;");
                     setBackground(javafx.scene.layout.Background.fill(
-                        javafx.scene.paint.Color.TRANSPARENT));
+                            javafx.scene.paint.Color.TRANSPARENT));
                 }
             }
         };
@@ -97,6 +98,8 @@ public class HistoryView implements AbstractView {
 
         if (list == null || list.isEmpty()) {
             showEmptyState();
+            totalExpensesLabel.setText("EGP 0.00");
+            transactionCountLabel.setText("0");
             totalExpensesLabel.setText("EGP " + String.format("%.2f", 0.0));
 
             transactionCountLabel.setText(String.valueOf(0));
@@ -111,6 +114,69 @@ public class HistoryView implements AbstractView {
 
         totalExpensesLabel.setText("EGP " + String.format("%.2f", total));
         transactionCountLabel.setText(String.valueOf(list.size()));
+    }
+
+    public void showEmptyState() {
+        Label emptyLabel = new Label("No Transactions Found");
+        emptyLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14;");
+        transactionListVBox.getChildren().add(emptyLabel);
+    }
+
+    public void showNoFilterResults() {
+        transactionListVBox.getChildren().clear();
+        Label noResults = new Label("No transactions found for the selected filter.");
+        noResults.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13;");
+        transactionListVBox.getChildren().add(noResults);
+    }
+
+    public void showUpdateConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Transaction Updated");
+        alert.showAndWait();
+    }
+
+    public void showEditForm(Transaction transaction) {}
+
+    @FXML
+    private void onApplyFilterClicked() {
+        String category = categoryComboBox.getValue();
+        Date[] dateRange = getDateRangeFromSelection(dateComboBox.getValue());
+        listener.onFilterApplied(category, dateRange[0], dateRange[1]);
+    }
+
+    private Date[] getDateRangeFromSelection(String selection) {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        Date from = null;
+
+        if ("Last Day".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            from = cal.getTime();
+        } else if ("Last Week".equals(selection)) {
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            from = cal.getTime();
+        } else if ("Last Month".equals(selection)) {
+            cal.add(Calendar.MONTH, -1);
+            from = cal.getTime();
+        }
+
+        return new Date[]{from, now};
+    }
+
+    @FXML
+    private void onClearFilterClicked() {
+        categoryComboBox.getSelectionModel().clearSelection();
+        dateComboBox.getSelectionModel().clearSelection();
+        if (listener != null) listener.onFilterCleared();
+    }
+
+    @FXML
+    public void onBackClicked() {
+        if (listener != null && listener.onBackClicked()) {
+            if (onNavigateBack != null) onNavigateBack.run();
+        }
     }
 
     private HBox buildTransactionRow(Transaction t) {
@@ -137,7 +203,7 @@ public class HistoryView implements AbstractView {
 
         VBox amountBox = new VBox(5);
         amountBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-        Label amountLabel = new Label("- EGP " + t.getTransactionAmount());
+        Label amountLabel = new Label("- EGP " + String.format("%.2f", t.getTransactionAmount()));
         amountLabel.setStyle("-fx-text-fill: #fb7185; -fx-font-weight: bold;");
 
         Button editBtn = new Button("Edit");
@@ -158,6 +224,25 @@ public class HistoryView implements AbstractView {
         buttonRow.getChildren().addAll(editBtn, deleteBtn);
         amountBox.getChildren().addAll(amountLabel, buttonRow);
 
+        // ✅ زر الـ Delete
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #fb7185;" +
+                        "-fx-font-size: 10; -fx-padding: 0; -fx-cursor: hand; -fx-underline: true;"
+        );
+        deleteBtn.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Transaction");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete this?");
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK && listener != null) {
+                    listener.onDeleteClicked(t);
+                }
+            });
+        });
+
+        amountBox.getChildren().addAll(amountLabel, editBtn, deleteBtn);
         row.getChildren().addAll(icon, info, amountBox);
 
         deleteBtn.setOnAction(e -> {
@@ -179,6 +264,7 @@ public class HistoryView implements AbstractView {
             default: return "\ud83d\udcb0";
         }
     }
+}
 
 
     public void showEditForm(Transaction transaction) {
