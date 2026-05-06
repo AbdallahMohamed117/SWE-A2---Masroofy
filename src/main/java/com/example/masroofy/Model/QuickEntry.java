@@ -18,6 +18,7 @@ public class QuickEntry extends AbstractModel {
     public boolean addTransaction(Transaction transaction) {
         String getAllowanceQuery = "SELECT allowance FROM Budget";
         String updateAllowanceQuery = "UPDATE Budget SET allowance = allowance - ?";
+        String updateDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit - ?";
         String studentIdQuery         = "SELECT student_id FROM Student WHERE student_state = 'ACTIVE'";
         String categoryIdQuery        = "SELECT category_id FROM Category WHERE category_name = ?";
         String insertCategoryQuery    = "INSERT INTO Category (category_name) VALUES (?)";
@@ -87,6 +88,11 @@ public class QuickEntry extends AbstractModel {
             try (PreparedStatement updateAllowanceStmt = connection.prepareStatement(updateAllowanceQuery)) {
                 updateAllowanceStmt.setDouble(1, transactionAmount);
                 updateAllowanceStmt.executeUpdate();
+            }
+
+            try (PreparedStatement updateDailyLimitStmt = connection.prepareStatement(updateDailyLimitQuery)) {
+                updateDailyLimitStmt.setDouble(1, transactionAmount);
+                updateDailyLimitStmt.executeUpdate();
             }
 
             try (PreparedStatement insertTransactionStatement = connection.prepareStatement(insertTransactionQuery)) {

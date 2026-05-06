@@ -19,6 +19,7 @@ public class AppController {
     private SetupView setupView;
     private Parent dashboardRoot;
     private DashboardView dashboardView;
+    private DashboardController dashboardController;
     private Parent quickEntryRoot;
     private QuickEntryView quickEntryView;
     private Parent historyRoot;
@@ -85,7 +86,7 @@ public class AppController {
                 return;
             }
         }
-        setupView.setOnNavigateToDashboard(() -> navigateTo(Screen.DASHBOARD));
+        setupView.setOnNavigateToDashboard(() -> navigateTo(Screen.PIN));
         appView.switchTo(setupRoot, Screen.SETUP);
     }
 
@@ -96,7 +97,7 @@ public class AppController {
                 dashboardRoot = loader.load();
                 dashboardView = loader.getController();
                 Dashboard dashboardModel = model.getDashboard();
-                new DashboardController(dashboardModel, dashboardView);
+                dashboardController = new DashboardController(dashboardModel, dashboardView);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
@@ -104,6 +105,7 @@ public class AppController {
         }
         dashboardView.setOnNavigateToQuickEntry(() -> navigateTo(Screen.QUICK_ENTRY));
         dashboardView.setOnNavigateToHistory(() -> navigateTo(Screen.HISTORY));
+        dashboardController.refreshDashboard();
         appView.switchTo(dashboardRoot, Screen.DASHBOARD);
     }
 

@@ -36,6 +36,11 @@ public class QuickEntryView implements AbstractView {
         this.listener = listener;
     }
 
+
+    public String getAmountText()        { return etAmountInput.getText(); }
+    public String getSelectedCategory()  { return selectedCategory; }
+    public String getNewCategoryText()   { return newCategoryField.getText(); }
+
     @Override
     public void printScreen() {
         exitEditMode();
@@ -86,63 +91,6 @@ public class QuickEntryView implements AbstractView {
         return tile;
     }
 
-    private void selectCategoryByName(String categoryName) {
-        if (categoryGrid == null) return;
-        for (javafx.scene.Node node : categoryGrid.getChildren()) {
-            if (node instanceof VBox) {
-                VBox tile = (VBox) node;
-                if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
-                    Label label = (Label) tile.getChildren().get(0);
-                    if (categoryName.equals(label.getText())) {
-                        selectCategory(categoryName, tile);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    public void enterEditMode(Transaction transaction) {
-        isEditMode = true;
-        editingTransaction = transaction;
-        etAmountInput.setText(String.valueOf(transaction.getTransactionAmount()));
-        selectCategoryByName(transaction.getTransactionCategory().getCategoryName());
-        btnSubmitExpense.setText("UPDATE EXPENSE");
-    }
-
-    public void exitEditMode() {
-        isEditMode = false;
-        editingTransaction = null;
-        if (btnSubmitExpense != null) btnSubmitExpense.setText("CONFIRM EXPENSE");
-    }
-
-
-
-
-
-    public String getAmountText()        { return etAmountInput.getText(); }
-    public String getSelectedCategory()  { return selectedCategory; }
-    public String getNewCategoryText()   { return newCategoryField.getText(); }
-    public void   clearNewCategory()     { if (newCategoryField != null) newCategoryField.clear(); }
-
-    public void showErrorMessage(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
-    }
-
-    public void showSavedConfirmation() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText("Expense saved successfully!");
-        alert.showAndWait();
-    }
-
-
-
     private void selectCategory(String categoryName, VBox tile) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle(
@@ -170,6 +118,64 @@ public class QuickEntryView implements AbstractView {
         alert.showAndWait();
     }
 
+    private void selectCategoryByName(String categoryName) {
+        if (categoryGrid == null) return;
+        for (javafx.scene.Node node : categoryGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox tile = (VBox) node;
+                if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
+                    Label label = (Label) tile.getChildren().get(0);
+                    if (categoryName.equals(label.getText())) {
+                        selectCategory(categoryName, tile);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    public void enterEditMode(Transaction transaction) {
+        isEditMode = true;
+        editingTransaction = transaction;
+        etAmountInput.setText(String.valueOf(transaction.getTransactionAmount()));
+        selectCategoryByName(transaction.getTransactionCategory().getCategoryName());
+        btnSubmitExpense.setText("UPDATE EXPENSE");
+    }
+
+    public void exitEditMode() {
+        isEditMode = false;
+        editingTransaction = null;
+        if (btnSubmitExpense != null) btnSubmitExpense.setText("CONFIRM EXPENSE");
+    }
+
+
+    public void clearNewCategory() {
+        if (newCategoryField != null){
+            newCategoryField.clear();
+        }
+    }
+
+    public void showErrorMessage(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    public void showSavedConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Expense saved successfully!");
+        alert.showAndWait();
+    }
+
+
+
+
 
     @FXML
     public void onBackClicked() {
@@ -189,6 +195,7 @@ public class QuickEntryView implements AbstractView {
             listener.onSubmitExpense(amountText, selectedCat);
         }
     }
+
     @FXML
     private void onAddCategoryClicked() {
         listener.onAddCategoryClicked(getNewCategoryText());

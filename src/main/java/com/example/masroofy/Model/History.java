@@ -2,6 +2,7 @@ package com.example.masroofy.Model;
 
 import com.example.masroofy.Model.Entity.Category;
 import com.example.masroofy.Model.Entity.Transaction;
+import com.example.masroofy.util.DateUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -113,10 +114,19 @@ public class History extends AbstractModel {
                     updateAllowanceStmt.setDouble(1, delta);
                     updateAllowanceStmt.executeUpdate();
                 }
-            } else if (delta < 0) {
+            }
+            else if (delta < 0) {
                 try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
                     addAllowanceStmt.setDouble(1, Math.abs(delta));
                     addAllowanceStmt.executeUpdate();
+                }
+            }
+
+            if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
+                String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
+                try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
+                    adjustDailyLimitStmt.setDouble(1, -delta);
+                    adjustDailyLimitStmt.executeUpdate();
                 }
             }
 
@@ -156,16 +166,56 @@ public class History extends AbstractModel {
         return false;
     }
 
-    public boolean removeTransaction(Transaction transaction) {
+    public boolean deleteTransaction(Transaction transaction) {
+        String getTransactionAmountQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
         String deleteTransactionQuery = "DELETE FROM Transactions WHERE transaction_timestamp = ?";
+        String addAllowanceQuery = "UPDATE Budget SET allowance = allowance + ?";
 
-        try (PreparedStatement deleteTransactionStatement = connection.prepareStatement(deleteTransactionQuery)) {
-            deleteTransactionStatement.setLong(1, transaction.getTransactionTimestamp());
+        try {
+            connection.setAutoCommit(false);
 
-            return deleteTransactionStatement.executeUpdate() > 0;
-        }
-        catch (SQLException e){
+            double amount = 0;
+            try (PreparedStatement getAmountStmt = connection.prepareStatement(getTransactionAmountQuery)) {
+                getAmountStmt.setLong(1, transaction.getTransactionTimestamp());
+                ResultSet amountRs = getAmountStmt.executeQuery();
+                if (amountRs.next()) {
+                    amount = amountRs.getDouble("transaction_amount");
+                } else {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
+
+            try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
+                addAllowanceStmt.setDouble(1, amount);
+                addAllowanceStmt.executeUpdate();
+            }
+
+            if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
+                String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
+                try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
+                    adjustDailyLimitStmt.setDouble(1, amount);
+                    adjustDailyLimitStmt.executeUpdate();
+                }
+            }
+
+            try (PreparedStatement deleteTransactionStatement = connection.prepareStatement(deleteTransactionQuery)) {
+                deleteTransactionStatement.setLong(1, transaction.getTransactionTimestamp());
+                int rows = deleteTransactionStatement.executeUpdate();
+
+                connection.commit();
+                connection.setAutoCommit(true);
+                return rows > 0;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }

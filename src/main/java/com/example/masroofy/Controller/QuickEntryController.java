@@ -21,7 +21,9 @@ public class QuickEntryController implements AbstractController, QuickEntryListe
         view.showCategoriesFromCategoryList(model.getCategories());
     }
 
-
+    public void refreshView(){
+        PrintView();
+    }
 
     @Override
     public void onSubmitExpense(String amountText, String category) {
