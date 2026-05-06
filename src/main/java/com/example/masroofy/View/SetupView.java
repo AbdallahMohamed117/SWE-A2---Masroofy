@@ -1,18 +1,67 @@
 package com.example.masroofy.View;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import com.example.masroofy.Listener.SetupListener;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class SetupView implements AbstractView {
-    private double allowanceInput;
-    private Date startDate;
-    private Date endDate;
+    private SetupListener eventListener;
+    private Runnable onNavigateToDashboard;
+    @FXML private TextField etAllowanceAmount;
+    @FXML private DatePicker etStartDate;
+    @FXML private DatePicker etEndDate;
+    @FXML private Label tvSetupError;
+    @FXML private Button btnStartCycle;
+
+    public void setEventListener(SetupListener sl) {
+        eventListener = sl;
+    }
+
+    public String getAmountText(){
+        return etAllowanceAmount.getText();
+    }
+    public Date getStartDate() {
+        LocalDate lc = etStartDate.getValue();
+        Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return date;
+    }
+    public Date getEndDate()   {
+        LocalDate lc = etEndDate.getValue();
+        Date date = Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return date;
+    }
+
+    public void setOnNavigateToDashboard(Runnable r) {
+        this.onNavigateToDashboard = r;
+    }
+
 
     @Override
-    public void printScreen() {}
+    public void printScreen() {
+        tvSetupError.setVisible(false);
+    }
 
     public void showSetupScreen() {}
 
-    public void showErrorMessage(String msg) {}
+    public void showErrorMessage(String msg) {
+        tvSetupError.setText(msg);
+        tvSetupError.setVisible(true);
+    }
 
-    public void onStartCycleClicked(double amount, Date start, Date end) {}
+    @FXML
+    public void onStartCycleClicked() {
+
+        double all = Double.parseDouble(getAmountText());
+        Date start = getStartDate();
+        Date end = getEndDate();
+
+        if (eventListener.onSetupSumbitted(all, start, end)) {
+            if (onNavigateToDashboard != null) onNavigateToDashboard.run();
+        }
+    }
+
 }

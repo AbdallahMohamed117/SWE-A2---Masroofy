@@ -1,14 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.masroofy.View.QuickEntryView"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.masroofy.View.QuickEntryView">
+    <children>
+        <Circle fill="#10b981" layoutX="450.0" layoutY="60.0" radius="80.0" style="-fx-opacity: 0.1;" />
+        <Circle fill="#38bdf8" layoutX="50.0" layoutY="700.0" radius="100.0" style="-fx-opacity: 0.05;" />
 
+        <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              spacing="20.0" style="-fx-padding: 30;">
+            <children>
+
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <children>
+                        <Button onAction="#onBackClicked"
+                                style="-fx-background-color: transparent; -fx-text-fill: white;
+                                       -fx-font-size: 18; -fx-cursor: hand;" text="←" />
+                        <Label style="-fx-text-fill: #ffffff;" text="Quick Entry">
+                            <font><Font name="System Bold" size="20.0" /></font>
+                        </Label>
+                    </children>
+                </HBox>
+
+                <VBox spacing="8.0"
+                      style="-fx-background-color: rgba(255, 255, 255, 0.04);
+                             -fx-background-radius: 20;
+                             -fx-border-color: rgba(255, 255, 255, 0.1);
+                             -fx-border-radius: 20; -fx-padding: 20;">
+                    <children>
+                        <Label style="-fx-text-fill: #ffffff;" text="AMOUNT">
+                            <font><Font name="System Bold" size="11.0" /></font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label style="-fx-text-fill: #ffffff;" text="EGP">
+                                    <font><Font name="System Bold" size="24.0" /></font>
+                                </Label>
+                                <TextField fx:id="etAmountInput" promptText="0.00"
+                                           style="-fx-background-color: transparent;
+                                                  -fx-text-fill: white;
+                                                  -fx-prompt-text-fill: #64748b;
+                                                  -fx-font-size: 32;
+                                                  -fx-font-weight: bold; -fx-padding: 0;"
+                                           HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                                    style="-fx-background-color: transparent;
+                                           -fx-background: transparent;
+                                           -fx-border-color: transparent;">
+                            <content>
+                                <GridPane fx:id="categoryGrid" hgap="10.0" vgap="10.0"
+                                          style="-fx-background-color: transparent;">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="33.3" />
+                                        <ColumnConstraints percentWidth="33.3" />
+                                        <ColumnConstraints percentWidth="33.3" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                    </rowConstraints>
+                                </GridPane>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <TextField fx:id="newCategoryField" promptText="New Category..."
+                                   style="-fx-background-color: rgba(255,255,255,0.06);
+                                          -fx-background-radius: 10; -fx-text-fill: white;
+                                          -fx-padding: 10;" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#onAddCategoryClicked"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: #10b981; -fx-border-radius: 10;
+                                       -fx-text-fill: #10b981; -fx-font-weight: bold;
+                                       -fx-min-width: 45; -fx-min-height: 40;" text="+" />
+                    </children>
+                </HBox>
+
+                <Button fx:id="btnSubmitExpense" maxWidth="Infinity"
+                        onAction="#onSubmitExpense" prefHeight="58.0"
+                        style="-fx-background-color: #10b981; -fx-background-radius: 15;
+                               -fx-text-fill: #0f172a; -fx-font-weight: bold;
+                               -fx-font-size: 15; -fx-cursor: hand;" text="CONFIRM EXPENSE">
+                    <effect>
+                        <DropShadow color="#10b98144" radius="15" />
+                    </effect>
+                </Button>
+
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

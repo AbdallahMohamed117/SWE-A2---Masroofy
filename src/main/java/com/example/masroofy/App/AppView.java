@@ -1,14 +1,25 @@
 package com.example.masroofy.App;
 
-import com.example.masroofy.Model.*;
-import com.example.masroofy.View.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class AppView implements AbstractView {
-    private AbstractView currView;
-    private AppModel model;
+public class AppView {
+    private final Stage primaryStage;
 
-    @Override
-    public void printScreen() {}
+    public AppView(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
+    }
 
-    public void switchScreen() {}
+    public void switchTo(Parent root, Screen screen) {
+        Scene currentScene = primaryStage.getScene();
+        if (currentScene != null) {
+            currentScene.setRoot(root);
+        } else {
+            primaryStage.setScene(new Scene(root, screen.getWidth(), screen.getHeight()));
+        }
+        primaryStage.sizeToScene();
+        primaryStage.centerOnScreen();
+    }
 }
