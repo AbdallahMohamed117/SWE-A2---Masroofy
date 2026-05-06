@@ -79,16 +79,40 @@ public class QuickEntryView implements AbstractView {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
         tile.setStyle(
-                "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
-                        "-fx-background-radius: 12; -fx-cursor: hand;"
+                "-fx-background-color: rgba(14, 165, 233, 0.15);" +
+                        "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                        "-fx-border-color: rgba(14, 165, 233, 0.3); -fx-border-radius: 12;"
         );
 
         Label label = new Label(categoryName);
         label.setFont(Font.font("System", 14));
+        label.setTextFill(Color.web("#38bdf8"));
         label.setWrapText(true);
         label.setAlignment(Pos.CENTER);
 
         tile.getChildren().add(label);
+
+        tile.setOnMouseEntered(e -> {
+            if (tile != currentlySelectedTile) {
+                tile.setStyle(
+                        "-fx-background-color: rgba(14, 165, 233, 0.25);" +
+                                "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                                "-fx-border-color: rgba(14, 165, 233, 0.5); -fx-border-radius: 12;" +
+                                "-fx-translate-y: -2;"
+                );
+            }
+        });
+
+        tile.setOnMouseExited(e -> {
+            if (tile != currentlySelectedTile) {
+                tile.setStyle(
+                        "-fx-background-color: rgba(14, 165, 233, 0.15);" +
+                                "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                                "-fx-border-color: rgba(14, 165, 233, 0.3); -fx-border-radius: 12;"
+                );
+            }
+        });
+
         tile.setOnMouseClicked(e -> selectCategory(categoryName, tile));
         return tile;
     }
@@ -96,15 +120,18 @@ public class QuickEntryView implements AbstractView {
     private void selectCategory(String categoryName, VBox tile) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle(
-                    "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
-                            "-fx-background-radius: 12; -fx-cursor: hand;"
+                    "-fx-background-color: rgba(14, 165, 233, 0.15);" +
+                            "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                            "-fx-border-color: rgba(14, 165, 233, 0.3); -fx-border-radius: 12;"
             );
-            ((Label) currentlySelectedTile.getChildren().get(0)).setTextFill(Color.BLACK);
+            ((Label) currentlySelectedTile.getChildren().get(0))
+                    .setTextFill(Color.web("#38bdf8"));
         }
 
         tile.setStyle(
-                "-fx-background-color: #3b82f6; -fx-padding: 12; " +
-                        "-fx-background-radius: 12; -fx-cursor: hand;"
+                "-fx-background-color: #0ea5e9;" +
+                        "-fx-padding: 12; -fx-background-radius: 12; -fx-cursor: hand;" +
+                        "-fx-border-color: #0ea5e9; -fx-border-radius: 12;"
         );
         ((Label) tile.getChildren().get(0)).setTextFill(Color.WHITE);
 
