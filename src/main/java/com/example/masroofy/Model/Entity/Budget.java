@@ -9,6 +9,8 @@ public class Budget {
     private Date startDate;
     private Date endDate;
     private double dailySafeLimit;
+    private double originalDailyLimit;
+    private Date lastRecalcDate;
 
 
     public double getAllowance() {
@@ -40,13 +42,26 @@ public class Budget {
     }
 
     public void setDailysafeLimit() {
-        //needs full implementation !!!!!!!
-
-        //to get the number of days
         LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(start, end);
 
         this.dailySafeLimit = allowance / daysBetween;
+    }
+
+    public double getOriginalDailyLimit() {
+        return originalDailyLimit;
+    }
+
+    public void setOriginalDailyLimit(double originalDailyLimit) {
+        this.originalDailyLimit = originalDailyLimit;
+    }
+
+    public Date getLastRecalcDate() {
+        return lastRecalcDate;
+    }
+
+    public void setLastRecalcDate(Date lastRecalcDate) {
+        this.lastRecalcDate = lastRecalcDate;
     }
 }

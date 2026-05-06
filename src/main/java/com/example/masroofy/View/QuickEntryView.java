@@ -21,8 +21,20 @@ public class QuickEntryView implements AbstractView {
     @FXML private GridPane categoryGrid;
     @FXML private TextField newCategoryField;
 
+    private static final String[] CATEGORY_COLORS = {
+            "#ef4444", "#f97316", "#eab308", "#22c55e",
+            "#14b8a6", "#3b82f6", "#8b5cf6", "#ec4899",
+            "#06b6d4", "#84cc16", "#f43f5e", "#a855f7"
+    };
+    private static final String[] CATEGORY_COLORS_DARK = {
+            "#b91c1c", "#c2410c", "#a16207", "#15803d",
+            "#0f766e", "#1d4ed8", "#6d28d9", "#be185d",
+            "#0e7490", "#4d7c0f", "#be123c", "#7e22ce"
+    };
+
     private String selectedCategory = null;
     private VBox currentlySelectedTile = null;
+    private String currentlySelectedColor = null;
     private QuickEntryListener listener;
     private Runnable onNavigateBack;
 
@@ -35,6 +47,11 @@ public class QuickEntryView implements AbstractView {
     public void setListener(QuickEntryListener listener) {
         this.listener = listener;
     }
+
+
+    public String getAmountText()        { return etAmountInput.getText(); }
+    public String getSelectedCategory()  { return selectedCategory; }
+    public String getNewCategoryText()   { return newCategoryField.getText(); }
 
     @Override
     public void printScreen() {
@@ -50,8 +67,9 @@ public class QuickEntryView implements AbstractView {
         if (categoryGrid == null) return;
         categoryGrid.getChildren().clear();
         int col = 0, row = 0;
-        for (String catName : categories) {
-            VBox tile = buildCategoryTile(catName);
+        for (int i = 0; i < categories.size(); i++) {
+            String color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+            VBox tile = buildCategoryTile(categories.get(i), color);
             categoryGrid.add(tile, col, row);
             col++;
             if (col == 3) {
@@ -67,11 +85,12 @@ public class QuickEntryView implements AbstractView {
         showCategories(names);
     }
 
-    private VBox buildCategoryTile(String categoryName) {
+
+    private VBox buildCategoryTile(String categoryName, String color) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
         tile.setStyle(
-                "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
+                "-fx-background-color: " + color + "; -fx-padding: 12; " +
                         "-fx-background-radius: 12; -fx-cursor: hand;"
         );
 
@@ -79,11 +98,31 @@ public class QuickEntryView implements AbstractView {
         label.setFont(Font.font("System", 14));
         label.setWrapText(true);
         label.setAlignment(Pos.CENTER);
+        label.setTextFill(Color.WHITE);
 
         tile.getChildren().add(label);
 
-        tile.setOnMouseClicked(e -> selectCategory(categoryName, tile));
+        tile.setOnMouseClicked(e -> selectCategory(categoryName, tile, color));
         return tile;
+    }
+
+    private void selectCategory(String categoryName, VBox tile, String color) {
+        if (currentlySelectedTile != null) {
+            currentlySelectedTile.setStyle(
+                    "-fx-background-color: " + currentlySelectedColor + "; -fx-padding: 12; " +
+                            "-fx-background-radius: 12; -fx-cursor: hand; -fx-opacity: 1.0;"
+            );
+        }
+
+        tile.setStyle(
+                "-fx-background-color: " + color + "; -fx-padding: 12; " +
+                        "-fx-background-radius: 12; -fx-cursor: hand; " +
+                        "-fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 12; -fx-opacity: 0.85;"
+        );
+
+        selectedCategory = categoryName;
+        currentlySelectedTile = tile;
+        currentlySelectedColor = color;
     }
 
     private void selectCategoryByName(String categoryName) {
@@ -94,13 +133,20 @@ public class QuickEntryView implements AbstractView {
                 if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
                     Label label = (Label) tile.getChildren().get(0);
                     if (categoryName.equals(label.getText())) {
-                        selectCategory(categoryName, tile);
+                        String style = tile.getStyle();
+                        String color = "#3b82f6";
+                        int start = style.indexOf("-fx-background-color:") + 22;
+                        int end = style.indexOf(";", start);
+                        if (start > 21 && end > start) color = style.substring(start, end).trim();
+                        selectCategory(categoryName, tile, color);
                         return;
                     }
                 }
             }
         }
     }
+
+
 
     public void enterEditMode(Transaction transaction) {
         isEditMode = true;
@@ -117,13 +163,11 @@ public class QuickEntryView implements AbstractView {
     }
 
 
-
-
-
-    public String getAmountText()        { return etAmountInput.getText(); }
-    public String getSelectedCategory()  { return selectedCategory; }
-    public String getNewCategoryText()   { return newCategoryField.getText(); }
-    public void   clearNewCategory()     { if (newCategoryField != null) newCategoryField.clear(); }
+    public void clearNewCategory() {
+        if (newCategoryField != null){
+            newCategoryField.clear();
+        }
+    }
 
     public void showErrorMessage(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -143,24 +187,6 @@ public class QuickEntryView implements AbstractView {
 
 
 
-    private void selectCategory(String categoryName, VBox tile) {
-        if (currentlySelectedTile != null) {
-            currentlySelectedTile.setStyle(
-                    "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
-                            "-fx-background-radius: 12; -fx-cursor: hand;"
-            );
-            ((Label) currentlySelectedTile.getChildren().get(0)).setTextFill(Color.BLACK);
-        }
-
-        tile.setStyle(
-                "-fx-background-color: #3b82f6; -fx-padding: 12; " +
-                        "-fx-background-radius: 12; -fx-cursor: hand;"
-        );
-        ((Label) tile.getChildren().get(0)).setTextFill(Color.WHITE);
-
-        selectedCategory = categoryName;
-        currentlySelectedTile = tile;
-    }
 
     public void showUpdateConfirmation() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -189,6 +215,7 @@ public class QuickEntryView implements AbstractView {
             listener.onSubmitExpense(amountText, selectedCat);
         }
     }
+
     @FXML
     private void onAddCategoryClicked() {
         listener.onAddCategoryClicked(getNewCategoryText());

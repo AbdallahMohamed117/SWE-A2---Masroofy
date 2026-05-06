@@ -20,33 +20,15 @@ public class HistoryController implements AbstractController, HistoryListener {
         view.setListener(this);
         view.setComboBox(model.getCategories());
         view.setDateFilters(Arrays.asList("Last Day", "Last Week", "Last Month"));
-        setupEditHandler();
         PrintView();
-    }
-
-    private void setupEditHandler() {
-        view.setEditHandler((transaction, scene) -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml"));
-                Parent quickEntryRoot = loader.load();
-                QuickEntryView qeView = loader.getController();
-                Parent historyRoot = scene.getRoot();
-
-                Runnable onDone = () -> {
-                    scene.setRoot(historyRoot);
-                    PrintView();
-                };
-
-                new QuickEntryEditController(model, qeView, transaction, onDone);
-                scene.setRoot(quickEntryRoot);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     @Override
     public void PrintView() {
+        view.showTransactions(model.getTransactions());
+    }
+
+    public void refreshHistory(){
         view.showTransactions(model.getTransactions());
     }
 
@@ -66,15 +48,34 @@ public class HistoryController implements AbstractController, HistoryListener {
 
     @Override
     public void onEditClicked(Transaction transaction) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml"));
+            Parent quickEntryRoot = loader.load();
+            QuickEntryView qeView = loader.getController();
+
+            qeView.setOnNavigateBack(() -> {
+                PrintView();
+            });
+
+            Runnable onDone = () -> {
+                qeView.setOnNavigateBack(null);
+                PrintView();
+            };
+
+            new QuickEntryEditController(model, qeView, transaction, onDone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onEditSubmitted(Transaction transaction) {
-        model.editTransaction(transaction);
     }
 
     @Override
     public void onDeleteClicked(Transaction transaction) {
+        model.deleteTransaction(transaction);
+        PrintView();
     }
 
     @Override

@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS Budget (
     allowance         REAL    NOT NULL,
     start_date        TEXT    NOT NULL,
     end_date          TEXT    NOT NULL,
-    daily_safe_limit  REAL    NOT NULL
+    daily_safe_limit  REAL    NOT NULL,
+    original_daily_limit REAL,
+    last_recalc_date  TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Student (

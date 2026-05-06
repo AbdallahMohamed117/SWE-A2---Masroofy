@@ -11,7 +11,7 @@ public class Pin extends AbstractModel {
     }
 
     public void setPin(String pin) {
-        String setPinQuery = "INSERT INTO Student (student_pincode, student_state, budget_id) VALUES (?, 'INACTIVE', ?)";
+        String setPinQuery = "INSERT INTO Student (student_pincode, student_state, budget_id) VALUES (?, 'ACTIVE', ?)";
 
         try (PreparedStatement setPinStatement = connection.prepareStatement(setPinQuery)){
             setPinStatement.setString(1, pin);

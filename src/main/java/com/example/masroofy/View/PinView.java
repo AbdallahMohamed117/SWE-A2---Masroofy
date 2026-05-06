@@ -24,6 +24,13 @@ public class PinView implements AbstractView {
     private final Circle[] dots = new Circle[4];
     private final StringBuilder enteredPin = new StringBuilder();
 
+    public void setPinListener(PinListener pl) {
+        pinListener = pl;
+    }
+    public void setOnNavigateToDashboard(Runnable r) {
+        this.onNavigateToDashboard = r;
+    }
+
     @FXML
     public void initialize() {
         dots[0] = pinDot1;
@@ -37,22 +44,26 @@ public class PinView implements AbstractView {
         showPinEntry();
     }
 
-    public void setPinListener(PinListener pl) {
-        pinListener = pl;
-    }
-
-    public void setOnNavigateToDashboard(Runnable r) {
-        this.onNavigateToDashboard = r;
-    }
-
     public String getEnteredPin() {
         return enteredPin.toString();
     }
+
+    private void updateDot(int index, Color color) {
+        dots[index].setFill(color);
+    }
+
+    private void updateDots(Color color) {
+        for (Circle dot : dots) {
+            dot.setFill(color);
+        }
+    }
+
 
     public void showPinEntry() {
         enteredPin.setLength(0);
         updateDots(EMPTY);
     }
+
 
     public void showErrorMessage(String msg) {
         updateDots(ERROR);
@@ -82,6 +93,7 @@ public class PinView implements AbstractView {
         }).start();
     }
 
+
     @FXML
     private void onDigitClicked(javafx.event.ActionEvent e) {
         if (enteredPin.length() >= 4) return;
@@ -101,16 +113,6 @@ public class PinView implements AbstractView {
         if(pinListener.onPinSubmitted(getEnteredPin())) {
             updateDots(Color.web("#10B981"));
             if (onNavigateToDashboard != null) onNavigateToDashboard.run();
-        }
-    }
-
-    private void updateDot(int index, Color color) {
-        dots[index].setFill(color);
-    }
-
-    private void updateDots(Color color) {
-        for (Circle dot : dots) {
-            dot.setFill(color);
         }
     }
 }
