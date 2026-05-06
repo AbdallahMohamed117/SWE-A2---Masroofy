@@ -8,8 +8,6 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.DashboardView">
-    <AnchorPane prefHeight="700.0" prefWidth="380.0" style="-fx-background-color: #0f172a;">
-
     <children>
         <Circle fill="#10b981" layoutX="330.0" layoutY="40.0" radius="80.0" style="-fx-opacity: 0.08;" />
         <Circle fill="#38bdf8" layoutX="50.0" layoutY="650.0" radius="60.0" style="-fx-opacity: 0.04;" />
@@ -18,7 +16,7 @@
             <children>
 
                 <!-- Header -->
-                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="450.0" spacing="15.0">
+                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="500.0" spacing="15.0">
                     <padding>
                         <Insets left="20.0" right="20.0" />
                     </padding>
@@ -46,62 +44,67 @@
                     </children>
                 </HBox>
 
+                <!-- Safe Daily Limit Card -->
+                <VBox fx:id="dailyLimitCard" spacing="12.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-radius: 20;">
+                    <padding>
+                        <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+                    </padding>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />
+                    </VBox.margin>
+                    <children>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="SAFE DAILY LIMIT" textFill="#94a3b8">
+                                            <font><Font name="System Bold" size="9.0" /></font>
+                                        </Label>
+                                        <Label fx:id="tvDailyLimit" textFill="#10b981">
+                                            <font><Font name="System Bold" size="28.0" /></font>
+                                        </Label>
+                                        <Label prefHeight="0.0" prefWidth="98.0" text="Safe to spend today" textFill="#64748b">
+                                            <font><Font size="11.0" /></font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <Label fx:id="lblStatusIcon" style="-fx-font-size: 24;" />
+                            </children>
+                        </HBox>
+                        <VBox spacing="6.0">
+                            <children>
+                                 <ProgressBar fx:id="progressBar" maxWidth="Infinity" prefHeight="6.0" progress="0.0" style="-fx-accent: #10b981;" />
+                                <HBox>
+                                    <children>
+                                        <Label fx:id="lblSpent" textFill="#94a3b8">
+                                            <font><Font size="10.0" /></font>
+                                        </Label>
+                                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label fx:id="lblLimit" textFill="#94a3b8">
+                                                    <font><Font size="10.0" /></font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- Spending Insights Card (Scrollable) -->
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />
+                    </VBox.margin>
                     <content>
                         <VBox spacing="15.0">
                             <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="5.0" />
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                             </padding>
                             <children>
-
-                                <!-- Safe Daily Limit Card -->
-                                <VBox fx:id="dailyLimitCard" prefHeight="71.0" prefWidth="203.0" spacing="12.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-radius: 20;">
-                                    <padding>
-                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                                    </padding>
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <VBox HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <Label text="SAFE DAILY LIMIT" textFill="#94a3b8">
-                                                            <font><Font name="System Bold" size="9.0" /></font>
-                                                        </Label>
-                                                        <Label fx:id="tvDailyLimit" textFill="#10b981">
-                                                            <font><Font name="System Bold" size="28.0" /></font>
-                                                        </Label>
-                                                        <Label prefHeight="0.0" prefWidth="98.0" text="Safe to spend today" textFill="#64748b">
-                                                            <font><Font size="11.0" /></font>
-                                                        </Label>
-                                                    </children>
-                                                </VBox>
-                                                <Label fx:id="lblStatusIcon" style="-fx-font-size: 24;" />
-                                            </children>
-                                        </HBox>
-                                        <VBox spacing="6.0">
-                                            <children>
-                                                 <ProgressBar fx:id="progressBar" maxWidth="Infinity" prefHeight="6.0" progress="0.0" style="-fx-accent: #10b981;" />
-                                                <HBox>
-                                                    <children>
-                                                        <Label fx:id="lblSpent" textFill="#94a3b8">
-                                                            <font><Font size="10.0" /></font>
-                                                        </Label>
-                                                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                                                            <children>
-                                                                <Label fx:id="lblLimit" textFill="#94a3b8">
-                                                                    <font><Font size="10.0" /></font>
-                                                                </Label>
-                                                            </children>
-                                                        </HBox>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
-
-                                <!-- Spending Insights Card -->
-                                <VBox prefHeight="272.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-radius: 20;">
+                                <VBox spacing="15.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.08); -fx-border-radius: 20;">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -133,21 +136,23 @@
                                         </VBox>
                                     </children>
                                 </VBox>
-
-                                <!-- Action Buttons -->
-                                <VBox spacing="10.0">
-                                    <children>
-                                        <Button fx:id="btnLogExpense" maxWidth="Infinity" onAction="#onLogExpenseClicked" prefHeight="50.0" style="-fx-background-color: #10b981; -fx-background-radius: 12; -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-cursor: hand;" text="+ LOG EXPENSE">
-                                            <effect><DropShadow color="#10b98133" radius="8" /></effect>
-                                        </Button>
-                                        <Button fx:id="btnHistory" maxWidth="Infinity" onAction="#onHistoryClicked" prefHeight="50.0" style="-fx-background-color: transparent; -fx-border-color: #10b981; -fx-border-radius: 12; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-cursor: hand;" text="HISTORY" />
-                                    </children>
-                                </VBox>
-
                             </children>
                         </VBox>
                     </content>
                 </ScrollPane>
+
+                <!-- Action Buttons -->
+                <VBox spacing="10.0">
+                    <padding>
+                        <Insets left="15.0" right="15.0" bottom="15.0" />
+                    </padding>
+                    <children>
+                        <Button fx:id="btnLogExpense" maxWidth="Infinity" onAction="#onLogExpenseClicked" prefHeight="50.0" style="-fx-background-color: #10b981; -fx-background-radius: 12; -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-cursor: hand;" text="+ LOG EXPENSE">
+                            <effect><DropShadow color="#10b98133" radius="8" /></effect>
+                        </Button>
+                        <Button fx:id="btnHistory" maxWidth="Infinity" onAction="#onHistoryClicked" prefHeight="50.0" style="-fx-background-color: transparent; -fx-border-color: #10b981; -fx-border-radius: 12; -fx-text-fill: #10b981; -fx-font-weight: bold; -fx-cursor: hand;" text="HISTORY" />
+                    </children>
+                </VBox>
 
                 <!-- Bottom Navigation -->
                 <HBox alignment="CENTER" prefHeight="65.0" spacing="30.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;">
@@ -156,10 +161,8 @@
                         <Label fx:id="btnSettings" style="-fx-font-size: 20; -fx-opacity: 0.4; -fx-cursor: hand;" text="⚙️" textFill="WHITE" />
                     </children>
                 </HBox>
-                <HBox alignment="CENTER" prefHeight="0.0" prefWidth="410.0" spacing="60.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;" />
 
             </children>
         </VBox>
     </children>
-</AnchorPane>
 </AnchorPane>
