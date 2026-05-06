@@ -121,9 +121,10 @@ public class DashboardView implements AbstractView {
     }
 
     public void showCategoryInsights() {
-        if (categoryContainer == null || categoryData == null || categoryData.isEmpty()) return;
+        if (categoryContainer == null || categoryData == null) return;
 
         categoryContainer.getChildren().clear();
+        if (categoryData.isEmpty()) return;
 
         categoryData.forEach((category, percentage) -> {
             HBox row = buildCategoryRow(category, percentage);

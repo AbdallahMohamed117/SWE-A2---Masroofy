@@ -28,34 +28,40 @@ public class DashboardController implements AbstractController, DashboardListene
     }
 
     public void refreshDashboard() {
+        Map<String, Double> pieChart = new HashMap<>();
+        double progress = 0;
+        boolean isOverspent = false;
+        double totalSpent = 0;
+
+
         view.setDaysLeft(model.getDaysLeft());
         model.recalculateDailyLimitIfNewDay();
 
         double dailyLimit = model.getDailyLimit();
 
+        view.setDailyLimit(dailyLimit);
+        view.setDaysLeft(model.getDaysLeft());
 
         List<Transaction> amounts = historyModel.getTransactions();
         double allowance = model.getAllowance();
+        if(!amounts.isEmpty()) {
+            for (Transaction t : amounts) {
+                totalSpent += t.getTransactionAmount();
+                Category category = t.getTransactionCategory();
+                String categoryName = category.getCategoryName();
 
-        double totalSpent = 0;
-        Map<String, Double> pieChart = new HashMap<>();
-        for(Transaction t : amounts) {
-            totalSpent += t.getTransactionAmount();
-            Category category = t.getTransactionCategory();
-            String categoryName = category.getCategoryName();
-
-            if (allowance > 0) {
-                double percentage = (t.getTransactionAmount() / allowance) * 100;
-                pieChart.merge(categoryName, percentage, Double::sum);
-            } else {
-                pieChart.put(categoryName, 0.0);
+                if (allowance > 0) {
+                    double percentage = (t.getTransactionAmount() / allowance) * 100;
+                    pieChart.merge(categoryName, percentage, Double::sum);
+                } else {
+                    pieChart.merge(categoryName, 0.0,Double::sum);
+                }
             }
+
+             progress = totalSpent / allowance;
+             isOverspent = totalSpent > dailyLimit;
         }
-
-        double progress = totalSpent / allowance;
-        boolean isOverspent = totalSpent > dailyLimit;
-
-        view.setDailyLimit(dailyLimit);
+        
         view.setTotalSpent(totalSpent);
         view.setPieChart(pieChart);
         view.setProgressBar(progress);
@@ -63,7 +69,6 @@ public class DashboardController implements AbstractController, DashboardListene
         view.setPieChartTotal(totalSpent);
         view.showLimitColor(isOverspent);
         view.setStatusIcon(isOverspent);
-        view.setDaysLeft(model.getDaysLeft());
 
         if (model.isDailyLimitExceeded()) {
             view.showLimitExceededAlert();
