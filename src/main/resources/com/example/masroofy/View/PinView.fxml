@@ -130,19 +130,6 @@
 
                     </children>
                 </VBox>
-                </GridPane>
-
-                <!-- Submit Button -->
-                <Button fx:id="btnSubmitPin" maxWidth="Infinity" prefHeight="55.0"
-                        onAction="#onSubmitPin"
-                        style="-fx-background-color: #38bdf8; -fx-background-radius: 15;
-                               -fx-text-fill: #0f172a; -fx-font-weight: bold; -fx-font-size: 15; -fx-cursor: hand;"
-                        text="UNLOCK NOW">
-                    <VBox.margin><Insets top="10.0" /></VBox.margin>
-                    <effect>
-                        <DropShadow color="#38bdf844" radius="15" />
-                    </effect>
-                </Button>
             </children>
         </VBox>
     </children>

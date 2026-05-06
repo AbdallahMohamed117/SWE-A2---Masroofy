@@ -89,10 +89,10 @@ public class QuickEntryView implements AbstractView {
     private VBox buildCategoryTile(String categoryName, String color) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
-        tile.setStyle(
-                "-fx-background-color: " + color + "; -fx-padding: 12; " +
-                        "-fx-background-radius: 12; -fx-cursor: hand;"
-        );
+        String originalStyle = "-fx-background-color: " + color + "; -fx-padding: 12; " +
+                "-fx-background-radius: 12; -fx-cursor: hand;";
+
+        tile.setStyle(originalStyle);
 
         Label label = new Label(categoryName);
         label.setFont(Font.font("System", 14));
@@ -111,6 +111,12 @@ public class QuickEntryView implements AbstractView {
                                 "-fx-border-color: rgba(14, 165, 233, 0.5); -fx-border-radius: 12;" +
                                 "-fx-translate-y: -2;"
                 );
+            }
+        });
+
+        tile.setOnMouseExited(e -> {
+            if (tile != currentlySelectedTile) {
+                tile.setStyle(originalStyle);
             }
         });
 

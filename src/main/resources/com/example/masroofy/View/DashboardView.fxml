@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="750.0" prefWidth="500.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.DashboardView">
-<AnchorPane prefHeight="700.0" prefWidth="380.0" style="-fx-background-color: #0f172a;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.masroofy.View.DashboardView">
+    <AnchorPane prefHeight="700.0" prefWidth="380.0" style="-fx-background-color: #0f172a;">
 
     <children>
         <Circle fill="#10b981" layoutX="330.0" layoutY="40.0" radius="80.0" style="-fx-opacity: 0.08;" />
@@ -162,4 +162,5 @@
             </children>
         </VBox>
     </children>
+</AnchorPane>
 </AnchorPane>
