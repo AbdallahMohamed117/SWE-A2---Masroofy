@@ -75,7 +75,7 @@
                                                         <Label fx:id="tvDailyLimit" textFill="#10b981">
                                                             <font><Font name="System Bold" size="28.0" /></font>
                                                         </Label>
-                                                        <Label text="Safe to spend today" textFill="#64748b">
+                                                        <Label prefHeight="0.0" prefWidth="98.0" text="Safe to spend today" textFill="#64748b">
                                                             <font><Font size="11.0" /></font>
                                                         </Label>
                                                     </children>
@@ -155,13 +155,7 @@
                 </ScrollPane>
 
                 <!-- Bottom Navigation -->
-                <HBox alignment="CENTER" prefHeight="65.0" spacing="60.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;">
-                    <children>
-                        <Label style="-fx-font-size: 20;" text="🏠" textFill="#10b981" />
-                        <Label style="-fx-font-size: 20; -fx-opacity: 0.4;" text="📊" textFill="WHITE" />
-                        <Label style="-fx-font-size: 20; -fx-opacity: 0.4;" text="⚙️" textFill="WHITE" />
-                    </children>
-                </HBox>
+                <HBox alignment="CENTER" prefHeight="0.0" prefWidth="410.0" spacing="60.0" style="-fx-background-color: #1e293b; -fx-background-radius: 25 25 0 0;" />
 
             </children>
         </VBox>
