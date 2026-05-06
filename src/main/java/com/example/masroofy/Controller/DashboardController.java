@@ -11,10 +11,14 @@ import java.util.Map;
 
 public class DashboardController implements AbstractController, DashboardListener {
 
+    private Dashboard model;
+    private DashboardView view;
+    private History historyModel;
+
     public DashboardController(Dashboard m, DashboardView v) {
         view = v;
         model = m;
-        hModel = new History();
+        historyModel = new History();
         view.setListener(this);
         PrintView();
     }
@@ -24,33 +28,36 @@ public class DashboardController implements AbstractController, DashboardListene
     }
 
     public void refreshDashboard() {
-        double limit = model.getDailyLimit();
+        view.setDaysLeft(model.getDaysLeft());
+        model.recalculateDailyLimitIfNewDay();
 
-        if (limit <= 0) {
-            view.showNoDataMessage();
-            view.setDaysLeft(model.getDaysLeft());
-            return;
-        }
+        double dailyLimit = model.getDailyLimit();
 
-        List<Transaction> amounts = hModel.getTransactions();
+
+        List<Transaction> amounts = historyModel.getTransactions();
+        double allowance = model.getAllowance();
 
         double totalSpent = 0;
-        Map<String, Double> piechart = new HashMap<>();
+        Map<String, Double> pieChart = new HashMap<>();
         for(Transaction t : amounts) {
             totalSpent += t.getTransactionAmount();
-            double percentage = (t.getTransactionAmount() / limit) * 100;
             Category category = t.getTransactionCategory();
             String categoryName = category.getCategoryName();
 
-            piechart.put(categoryName, percentage);
+            if (allowance > 0) {
+                double percentage = (t.getTransactionAmount() / allowance) * 100;
+                pieChart.merge(categoryName, percentage, Double::sum);
+            } else {
+                pieChart.put(categoryName, 0.0);
+            }
         }
 
-        double progress = totalSpent / limit;
-        boolean isOverspent = totalSpent > limit;
+        double progress = totalSpent / allowance;
+        boolean isOverspent = totalSpent > dailyLimit;
 
-        view.setDailyLimit(limit);
+        view.setDailyLimit(dailyLimit);
         view.setTotalSpent(totalSpent);
-        view.setPieChart(piechart);
+        view.setPieChart(pieChart);
         view.setProgressBar(progress);
         view.updatePieChartProgress(progress);
         view.setPieChartTotal(totalSpent);
@@ -58,12 +65,14 @@ public class DashboardController implements AbstractController, DashboardListene
         view.setStatusIcon(isOverspent);
         view.setDaysLeft(model.getDaysLeft());
 
+        if (model.isDailyLimitExceeded()) {
+            view.showLimitExceededAlert();
+        } else {
+            view.hideLimitExceededAlert();
+        }
+
         view.printScreen();
     }
-
-    private Dashboard model;
-    private DashboardView view;
-    private History hModel;
 
     @Override
     public void onLogExpenseClicked() {

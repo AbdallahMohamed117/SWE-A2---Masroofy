@@ -21,10 +21,12 @@ public class AppController {
     private SetupView setupView;
     private Parent dashboardRoot;
     private DashboardView dashboardView;
+    private DashboardController dashboardController;
     private Parent quickEntryRoot;
     private QuickEntryView quickEntryView;
     private Parent historyRoot;
     private HistoryView historyView;
+    private HistoryController historyController;
 
     public AppController(Stage primaryStage) {
         appView = new AppView(primaryStage);
@@ -102,7 +104,7 @@ public class AppController {
                 return;
             }
         }
-        setupView.setOnNavigateToDashboard(() -> navigateTo(Screen.DASHBOARD));
+        setupView.setOnNavigateToDashboard(() -> navigateTo(Screen.PIN));
         appView.switchTo(setupRoot, Screen.SETUP);
     }
 
@@ -113,7 +115,7 @@ public class AppController {
                 dashboardRoot = loader.load();
                 dashboardView = loader.getController();
                 Dashboard dashboardModel = model.getDashboard();
-                new DashboardController(dashboardModel, dashboardView);
+                dashboardController = new DashboardController(dashboardModel, dashboardView);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
@@ -122,6 +124,7 @@ public class AppController {
         dashboardView.setOnNavigateToQuickEntry(() -> navigateTo(Screen.QUICK_ENTRY));
         dashboardView.setOnNavigateToHistory(() -> navigateTo(Screen.HISTORY));
         dashboardView.setOnNavigateToSettings(() -> navigateTo(Screen.SETTINGS));
+        dashboardController.refreshDashboard();
         appView.switchTo(dashboardRoot, Screen.DASHBOARD);
 
     }
@@ -151,12 +154,13 @@ public class AppController {
                 historyRoot = loader.load();
                 historyView = loader.getController();
                 History historyModel = model.getHistory();
-                new HistoryController(historyModel, historyView);
+                historyController = new HistoryController(historyModel, historyView);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
         }
+        historyController.refreshHistory();
         historyView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
         appView.switchTo(historyRoot, Screen.HISTORY);
     }

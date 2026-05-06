@@ -11,6 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import java.util.Map;
+import javafx.geometry.Insets;
 
 public class DashboardView implements AbstractView {
 
@@ -26,6 +27,9 @@ public class DashboardView implements AbstractView {
     @FXML private Circle circleUsed;
     @FXML private Circle circleRemaining;
     @FXML private VBox categoryContainer;
+    @FXML private VBox dailyLimitCard;
+
+    private VBox alertBanner;
 
     // ✅ أضف الـ fx:id الجديد
     @FXML private Label btnSettings;
@@ -58,6 +62,18 @@ public class DashboardView implements AbstractView {
         showSafeDailyLimit();
         showPieChart();
         showCategoryInsights();
+    }
+
+    public void setDaysLeft(int days) {
+        if (lblDaysLeft != null) {
+            lblDaysLeft.setText(days + " days left");
+        }
+    }
+
+    public void setStatusIcon(boolean isOverspent) {
+        if (lblStatusIcon != null) {
+            lblStatusIcon.setText(isOverspent ? "\u26a0\ufe0f" : "\u2705");
+        }
     }
 
     public void showSafeDailyLimit() {
@@ -161,6 +177,45 @@ public class DashboardView implements AbstractView {
     public void showAlert(String message) { System.out.println("ALERT: " + message); }
 
     public void showFinalDayWarning() { tvDailyLimit.setStyle("-fx-text-fill: #f59e0b;"); }
+    public void showAlert(String message) {
+        System.out.println("ALERT: " + message);
+    }
+    public void showFinalDayWarning() {
+        tvDailyLimit.setStyle("-fx-text-fill: #f59e0b;");
+    }
+    public void showNoDataMessage() {
+        tvDailyLimit.setText("No Data");
+    }
+
+    public void showLimitExceededAlert() {
+        if (alertBanner == null && dailyLimitCard != null)
+        {
+            alertBanner = new VBox(5);
+            alertBanner.setStyle(
+                    "-fx-background-color: rgba(239, 68, 68, 0.15);" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-border-color: rgba(239, 68, 68, 0.4);" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-padding: 8 12;"
+            );
+
+            Label alertIcon = new Label("\u26a0\ufe0f");
+            alertIcon.setStyle("-fx-font-size: 12;");
+
+            Label alertText = new Label("Daily Limit Exceeded! Your next daily limit will be reduced.");
+            alertText.setStyle(
+                    "-fx-text-fill: #fca5a5;" +
+                            "-fx-font-size: 10;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-wrap-text: true;"
+            );
+
+            alertBanner.getChildren().addAll(alertIcon, alertText);
+            dailyLimitCard.getChildren().add(0, alertBanner);
+        }
+    }
+
+
 
     public void showLimitColor(boolean isOverspent) {
         tvDailyLimit.setStyle(isOverspent ? "-fx-text-fill: #ef4444;" : "-fx-text-fill: #10b981;");
@@ -170,4 +225,24 @@ public class DashboardView implements AbstractView {
 
     @FXML public void onLogExpenseClicked() { if (onNavigateToQuickEntry != null) onNavigateToQuickEntry.run(); }
     @FXML public void onHistoryClicked() { if (onNavigateToHistory != null) onNavigateToHistory.run(); }
+}
+
+    public void hideLimitExceededAlert() {
+        if (alertBanner != null && dailyLimitCard != null) {
+            dailyLimitCard.getChildren().remove(alertBanner);
+            alertBanner = null;
+        }
+    }
+
+    @FXML public void onLogExpenseClicked() {
+        if (onNavigateToQuickEntry != null){
+            onNavigateToQuickEntry.run();
+        }
+    }
+
+    @FXML public void onHistoryClicked() {
+        if (onNavigateToHistory != null){
+            onNavigateToHistory.run();
+        }
+    }
 }

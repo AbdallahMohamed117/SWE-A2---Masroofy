@@ -2,6 +2,7 @@ package com.example.masroofy.Model;
 
 import com.example.masroofy.Model.Entity.Category;
 import com.example.masroofy.Model.Entity.Transaction;
+import com.example.masroofy.util.DateUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,40 +61,161 @@ public class History extends AbstractModel {
     }
 
     public boolean editTransaction(Transaction transaction) {
+        String getOldTransactionQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
+        String getAllowanceQuery = "SELECT allowance FROM Budget";
+        String updateAllowanceQuery = "UPDATE Budget SET allowance = allowance - ?";
+        String addAllowanceQuery = "UPDATE Budget SET allowance = allowance + ?";
         String categoryIdQuery = "SELECT category_id FROM Category WHERE category_name = ?";
         String updateTransactionQuery = "UPDATE Transactions SET transaction_amount = ?, category_id = ? WHERE transaction_timestamp = ?";
 
-        try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery);
-             PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery))
-        {
-            categoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
-            ResultSet categoryResult = categoryIdStatement.executeQuery();
-            if (categoryResult.next()) {
-                int categoryId = categoryResult.getInt("category_id");
+        try {
+            connection.setAutoCommit(false);
 
-                updateTransactionStatement.setDouble(1, transaction.getTransactionAmount());
+            double oldAmount = 0;
+            try (PreparedStatement getOldStmt = connection.prepareStatement(getOldTransactionQuery)) {
+                getOldStmt.setLong(1, transaction.getTransactionTimestamp());
+                ResultSet oldRs = getOldStmt.executeQuery();
+                if (oldRs.next()) {
+                    oldAmount = oldRs.getDouble("transaction_amount");
+                } else {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
+
+            double newAmount = transaction.getTransactionAmount();
+            if (newAmount <= 0) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+            double delta = newAmount - oldAmount;
+
+            if (delta > 0) {
+                double currentAllowance = 0;
+                try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
+                    ResultSet allowanceRs = getAllowanceStmt.executeQuery();
+                    if (allowanceRs.next()) {
+                        currentAllowance = allowanceRs.getDouble("allowance");
+                    } else {
+                        connection.rollback();
+                        connection.setAutoCommit(true);
+                        return false;
+                    }
+                }
+                if (delta > currentAllowance) {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+                try (PreparedStatement updateAllowanceStmt = connection.prepareStatement(updateAllowanceQuery)) {
+                    updateAllowanceStmt.setDouble(1, delta);
+                    updateAllowanceStmt.executeUpdate();
+                }
+            }
+            else if (delta < 0) {
+                try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
+                    addAllowanceStmt.setDouble(1, Math.abs(delta));
+                    addAllowanceStmt.executeUpdate();
+                }
+            }
+
+            if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
+                String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
+                try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
+                    adjustDailyLimitStmt.setDouble(1, -delta);
+                    adjustDailyLimitStmt.executeUpdate();
+                }
+            }
+
+            int categoryId = -1;
+            try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery)) {
+                categoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
+                ResultSet categoryResult = categoryIdStatement.executeQuery();
+                if (categoryResult.next()) {
+                    categoryId = categoryResult.getInt("category_id");
+                }
+            }
+            if (categoryId == -1) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+            try (PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery)) {
+                updateTransactionStatement.setDouble(1, newAmount);
                 updateTransactionStatement.setInt   (2, categoryId);
                 updateTransactionStatement.setLong  (3, transaction.getTransactionTimestamp());
+                int rows = updateTransactionStatement.executeUpdate();
 
-                return updateTransactionStatement.executeUpdate() > 0;
+                connection.commit();
+                connection.setAutoCommit(true);
+                return rows > 0;
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }
 
-    public boolean removeTransaction(Transaction transaction) {
+    public boolean deleteTransaction(Transaction transaction) {
+        String getTransactionAmountQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
         String deleteTransactionQuery = "DELETE FROM Transactions WHERE transaction_timestamp = ?";
+        String addAllowanceQuery = "UPDATE Budget SET allowance = allowance + ?";
 
-        try (PreparedStatement deleteTransactionStatement = connection.prepareStatement(deleteTransactionQuery)) {
-            deleteTransactionStatement.setLong(1, transaction.getTransactionTimestamp());
+        try {
+            connection.setAutoCommit(false);
 
-            return deleteTransactionStatement.executeUpdate() > 0;
-        }
-        catch (SQLException e){
+            double amount = 0;
+            try (PreparedStatement getAmountStmt = connection.prepareStatement(getTransactionAmountQuery)) {
+                getAmountStmt.setLong(1, transaction.getTransactionTimestamp());
+                ResultSet amountRs = getAmountStmt.executeQuery();
+                if (amountRs.next()) {
+                    amount = amountRs.getDouble("transaction_amount");
+                } else {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
+
+            try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
+                addAllowanceStmt.setDouble(1, amount);
+                addAllowanceStmt.executeUpdate();
+            }
+
+            if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
+                String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
+                try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
+                    adjustDailyLimitStmt.setDouble(1, amount);
+                    adjustDailyLimitStmt.executeUpdate();
+                }
+            }
+
+            try (PreparedStatement deleteTransactionStatement = connection.prepareStatement(deleteTransactionQuery)) {
+                deleteTransactionStatement.setLong(1, transaction.getTransactionTimestamp());
+                int rows = deleteTransactionStatement.executeUpdate();
+
+                connection.commit();
+                connection.setAutoCommit(true);
+                return rows > 0;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }

@@ -15,7 +15,7 @@ public class Setup extends AbstractModel {
 
     public void setCycle(Budget budget){
 
-        String createBudgetQuery = "INSERT INTO Budget (allowance, start_date, end_date, daily_safe_limit) VALUES (?, ?, ?, ?)";
+        String createBudgetQuery = "INSERT INTO Budget (allowance, start_date, end_date, daily_safe_limit, original_daily_limit, last_recalc_date) VALUES (?, ?, ?, ?, ?, ?)";
         String updateStudentQuery = "UPDATE Student SET student_state = 'ACTIVE'";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -27,6 +27,8 @@ public class Setup extends AbstractModel {
             createBudgetStatement.setString(2, sdf.format(budget.getStartDate()));
             createBudgetStatement.setString(3, sdf.format(budget.getEndDate()));
             createBudgetStatement.setDouble(4, budget.getDailySafeLimit());
+            createBudgetStatement.setDouble(5, budget.getDailySafeLimit());
+            createBudgetStatement.setString(6, sdf.format(new java.util.Date()));
 
             createBudgetStatement.executeUpdate();
             updateStudentStateStatement.executeUpdate();

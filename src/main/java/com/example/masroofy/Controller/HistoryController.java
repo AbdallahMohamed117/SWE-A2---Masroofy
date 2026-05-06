@@ -5,6 +5,8 @@ import com.example.masroofy.Model.*;
 import com.example.masroofy.Model.Entity.Transaction;
 import com.example.masroofy.View.*;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -20,8 +22,13 @@ public class HistoryController implements AbstractController, HistoryListener {
         view.setDateFilters(Arrays.asList("Last Day", "Last Week", "Last Month"));
         PrintView();
     }
+
     @Override
     public void PrintView() {
+        view.showTransactions(model.getTransactions());
+    }
+
+    public void refreshHistory(){
         view.showTransactions(model.getTransactions());
     }
 
@@ -39,27 +46,40 @@ public class HistoryController implements AbstractController, HistoryListener {
         view.showTransactions(model.getTransactions());
     }
 
-
-
     @Override
     public void onEditClicked(Transaction transaction) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml"));
+            Parent quickEntryRoot = loader.load();
+            QuickEntryView qeView = loader.getController();
 
+            qeView.setOnNavigateBack(() -> {
+                PrintView();
+            });
+
+            Runnable onDone = () -> {
+                qeView.setOnNavigateBack(null);
+                PrintView();
+            };
+
+            new QuickEntryEditController(model, qeView, transaction, onDone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onEditSubmitted(Transaction transaction) {
-
-        model.editTransaction(transaction);
     }
 
     @Override
     public void onDeleteClicked(Transaction transaction) {
-
+        model.deleteTransaction(transaction);
+        PrintView();
     }
 
     @Override
     public boolean onBackClicked() {
         return true;
     }
-
 }
