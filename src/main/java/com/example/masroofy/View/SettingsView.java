@@ -1,12 +1,10 @@
 package com.example.masroofy.View;
 
+import com.example.masroofy.Listener.SettingsListener;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class SettingsView implements AbstractView, Initializable {
+public class SettingsView implements AbstractView {
 
     @FXML private TextField etCurrentPin;
     @FXML private TextField etNewPin;
@@ -15,11 +13,12 @@ public class SettingsView implements AbstractView, Initializable {
     @FXML private Button btnChangePin;
     @FXML private Button btnClearCycle;
 
+    private SettingsListener listener;
     private Runnable onNavigateBack;
     private Runnable onNavigateToSetup;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @FXML
+    public void initialize() {
         tvPinError.setVisible(false);
         tvClearError.setVisible(false);
     }
@@ -27,35 +26,34 @@ public class SettingsView implements AbstractView, Initializable {
     @Override
     public void printScreen() {}
 
-    public void setOnNavigateBack(Runnable r) {
-        this.onNavigateBack = r;
+    public void setSettingsListener(SettingsListener listener) {
+        this.listener = listener;
     }
 
-    public void setOnNavigateToSetup(Runnable r) {
-        this.onNavigateToSetup = r;
-    }
+    public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
+    public void setOnNavigateToSetup(Runnable r) { this.onNavigateToSetup = r; }
 
-    public String getCurrentPin() {
-        return etCurrentPin.getText();
-    }
-
-    public String getNewPin() {
-        return etNewPin.getText();
-    }
+    public String getCurrentPin() { return etCurrentPin.getText(); }
+    public String getNewPin() { return etNewPin.getText(); }
 
     public void showPinError(String msg) {
         tvPinError.setText(msg);
+        tvPinError.setStyle("-fx-text-fill: #fb7185;");
         tvPinError.setVisible(true);
     }
 
-    public void hidePinError() {
-        tvPinError.setVisible(false);
-    }
+    public void hidePinError() { tvPinError.setVisible(false); }
 
     public void showPinSuccess() {
         etCurrentPin.clear();
         etNewPin.clear();
         tvPinError.setVisible(false);
+    }
+
+    public void showSuccessMessage(String msg) {
+        tvPinError.setText(msg);
+        tvPinError.setStyle("-fx-text-fill: #10b981;");
+        tvPinError.setVisible(true);
     }
 
     public void showClearError(String msg) {
@@ -67,13 +65,11 @@ public class SettingsView implements AbstractView, Initializable {
         if (onNavigateToSetup != null) onNavigateToSetup.run();
     }
 
-    public void navigateBack() {
-        if (onNavigateBack != null) onNavigateBack.run();
-    }
-
     @FXML
     public void onChangePinClicked() {
-        // Controller handles logic
+        if (listener != null) {
+            listener.onChangePinClicked(getCurrentPin(), getNewPin());
+        }
     }
 
     @FXML
@@ -81,18 +77,20 @@ public class SettingsView implements AbstractView, Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Clear Cycle");
         alert.setHeaderText("Are you sure?");
-        alert.setContentText(
-                "This will permanently delete all logs for this cycle."
-        );
+        alert.setContentText("This will permanently delete all your data and start fresh.");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // Controller handles logic
+                if (listener != null) {
+                    listener.onClearCycleClicked();
+                }
             }
         });
     }
 
     @FXML
     public void onBackClicked() {
-        navigateBack();
+        if (listener != null && listener.onBackClicked()) {
+            if (onNavigateBack != null) onNavigateBack.run();
+        }
     }
 }

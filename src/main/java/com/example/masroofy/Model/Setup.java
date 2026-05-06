@@ -39,17 +39,37 @@ public class Setup extends AbstractModel {
         }
     }
     public void clearCycle() {
+        String deleteTransactionsSql = "DELETE FROM Transactions";
+        String deleteCategoriesSql = "DELETE FROM Category";
         String deleteBudgetSql = "DELETE FROM Budget";
         String updateStudentSql = "UPDATE Student SET student_state = 'INACTIVE'";
 
-        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteBudgetSql);
-             PreparedStatement updateStmt = connection.prepareStatement(updateStudentSql)) {
+        try {
+            connection.setAutoCommit(false);
 
-            updateStmt.executeUpdate();
-            deleteStmt.executeUpdate();
+            try (PreparedStatement stmt = connection.prepareStatement(deleteTransactionsSql)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement(deleteCategoriesSql)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement(deleteBudgetSql)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement(updateStudentSql)) {
+                stmt.executeUpdate();
+            }
 
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

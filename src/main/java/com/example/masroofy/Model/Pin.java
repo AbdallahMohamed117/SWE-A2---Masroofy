@@ -53,4 +53,34 @@ public class Pin extends AbstractModel {
         }
         return false;
     }
+
+    public boolean updatePin(String currentPin, String newPin) {
+        if (!checkPin(currentPin)) return false;
+
+        String updatePinQuery = "UPDATE Student SET student_pincode = ? WHERE student_pincode = ?";
+
+        try (PreparedStatement updateStmt = connection.prepareStatement(updatePinQuery)) {
+            updateStmt.setString(1, newPin);
+            updateStmt.setString(2, currentPin);
+            updateStmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isUserActive() {
+        String checkState = "SELECT student_state FROM Student LIMIT 1";
+
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkState)) {
+            ResultSet result = checkStmt.executeQuery();
+            if (result.next()) {
+                return "ACTIVE".equals(result.getString("student_state"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

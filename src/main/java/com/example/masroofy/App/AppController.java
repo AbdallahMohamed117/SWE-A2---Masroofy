@@ -54,21 +54,39 @@ public class AppController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(Screen.SETTINGS.getFxmlPath()));
                 settingsRoot = loader.load();
                 settingsView = loader.getController();
+                new SettingsController(model.getPin(), model.getSetup(), settingsView);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
         }
         settingsView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
-        settingsView.setOnNavigateToSetup(() -> navigateTo(Screen.SETUP));
+        settingsView.setOnNavigateToSetup(() -> {
+            resetAllViews();
+            navigateTo(Screen.SETUP);
+        });
         appView.switchTo(settingsRoot, Screen.SETTINGS);
     }
+    private void resetAllViews() {
+        settingsRoot = null;
+        settingsView = null;
+        dashboardRoot = null;
+        dashboardView = null;
+        dashboardController = null;
+        quickEntryRoot = null;
+        quickEntryView = null;
+        historyRoot = null;
+        historyView = null;
+        historyController = null;
+        editTransaction = null;
+    }
+
     private void showSplash() {
         if (splashView == null) {
             splashView = new SplashView();
             splashRoot = splashView.createRoot();
             splashView.startAnimation(() -> {
-                if (model.hasPin()) {
+                if (model.hasPin() && model.getPin().isUserActive()) {
                     navigateTo(Screen.PIN);
                 } else {
                     navigateTo(Screen.SETUP);
