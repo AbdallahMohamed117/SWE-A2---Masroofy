@@ -27,9 +27,13 @@ public class DashboardView implements AbstractView {
     @FXML private Circle circleRemaining;
     @FXML private VBox categoryContainer;
 
+    // ✅ أضف الـ fx:id الجديد
+    @FXML private Label btnSettings;
+
     private DashboardListener listener;
     private Runnable onNavigateToQuickEntry;
     private Runnable onNavigateToHistory;
+    private Runnable onNavigateToSettings; // ✅ جديد
     private double dailyLimit;
     private double totalSpent;
     private Map<String, Double> categoryData;
@@ -40,6 +44,14 @@ public class DashboardView implements AbstractView {
 
     public void setOnNavigateToQuickEntry(Runnable r) { this.onNavigateToQuickEntry = r; }
     public void setOnNavigateToHistory(Runnable r) { this.onNavigateToHistory = r; }
+
+    // ✅ الـ method الجديدة
+    public void setOnNavigateToSettings(Runnable r) {
+        this.onNavigateToSettings = r;
+        if (btnSettings != null) {
+            btnSettings.setOnMouseClicked(e -> onNavigateToSettings.run());
+        }
+    }
 
     @Override
     public void printScreen() {
@@ -54,36 +66,25 @@ public class DashboardView implements AbstractView {
         lblLimit.setText("Limit: EGP " + String.format("%.2f", dailyLimit));
     }
 
-    public void setDailyLimit(double limit) {
-        this.dailyLimit = limit;
-    }
-
-    public void setTotalSpent(double spent) {
-        this.totalSpent = spent;
-    }
+    public void setDailyLimit(double limit) { this.dailyLimit = limit; }
+    public void setTotalSpent(double spent) { this.totalSpent = spent; }
 
     public void setProgressBar(double progress) {
-        if (progressBar != null) {
-            progressBar.setProgress(Math.min(progress, 1.0));
-        }
+        if (progressBar != null) progressBar.setProgress(Math.min(progress, 1.0));
     }
 
     public void setDaysLeft(int days) {
-        if (lblDaysLeft != null) {
-            lblDaysLeft.setText(days + " days left");
-        }
+        if (lblDaysLeft != null) lblDaysLeft.setText(days + " days left");
     }
 
     public void setStatusIcon(boolean isOverspent) {
-        if (lblStatusIcon != null) {
+        if (lblStatusIcon != null)
             lblStatusIcon.setText(isOverspent ? "\u26a0\ufe0f" : "\u2705");
-        }
     }
 
     public void setPieChartTotal(double total) {
-        if (lblPieChartTotal != null) {
+        if (lblPieChartTotal != null)
             lblPieChartTotal.setText("EGP " + String.format("%.2f", total));
-        }
     }
 
     public void updatePieChartProgress(double progress) {
@@ -108,18 +109,14 @@ public class DashboardView implements AbstractView {
         circleRemaining.setStrokeDashOffset(-usedDash);
     }
 
-    public void showPieChart() {
-    }
+    public void showPieChart() {}
 
-    public void setPieChart(Map<String, Double> data) {
-        this.categoryData = data;
-    }
+    public void setPieChart(Map<String, Double> data) { this.categoryData = data; }
 
     public void showCategoryInsights() {
         if (categoryContainer == null || categoryData == null || categoryData.isEmpty()) return;
 
         categoryContainer.getChildren().clear();
-
         categoryData.forEach((category, percentage) -> {
             HBox row = buildCategoryRow(category, percentage);
             categoryContainer.getChildren().add(row);
@@ -129,16 +126,13 @@ public class DashboardView implements AbstractView {
     private HBox buildCategoryRow(String category, double percentage) {
         HBox row = new HBox(12);
         row.setStyle(
-            "-fx-background-color: rgba(255,255,255,0.03);" +
-            "-fx-padding: 10 12; -fx-background-radius: 12;"
+                "-fx-background-color: rgba(255,255,255,0.03);" +
+                        "-fx-padding: 10 12; -fx-background-radius: 12;"
         );
 
         String emoji = getCategoryEmoji(category);
         Label icon = new Label(emoji);
-        icon.setStyle(
-            "-fx-background-color: rgba(16,185,129,0.1);" +
-            "-fx-padding: 8; -fx-background-radius: 10;"
-        );
+        icon.setStyle("-fx-background-color: rgba(16,185,129,0.1); -fx-padding: 8; -fx-background-radius: 10;");
 
         Label nameLabel = new Label(category);
         nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13;");
@@ -164,25 +158,15 @@ public class DashboardView implements AbstractView {
         }
     }
 
-    public void showAlert(String message) {
-        System.out.println("ALERT: " + message);
-    }
+    public void showAlert(String message) { System.out.println("ALERT: " + message); }
 
-    public void showFinalDayWarning() {
-        tvDailyLimit.setStyle("-fx-text-fill: #f59e0b;");
-    }
+    public void showFinalDayWarning() { tvDailyLimit.setStyle("-fx-text-fill: #f59e0b;"); }
 
     public void showLimitColor(boolean isOverspent) {
-        if (isOverspent) {
-            tvDailyLimit.setStyle("-fx-text-fill: #ef4444;");
-        } else {
-            tvDailyLimit.setStyle("-fx-text-fill: #10b981;");
-        }
+        tvDailyLimit.setStyle(isOverspent ? "-fx-text-fill: #ef4444;" : "-fx-text-fill: #10b981;");
     }
 
-    public void showNoDataMessage() {
-        tvDailyLimit.setText("No Data");
-    }
+    public void showNoDataMessage() { tvDailyLimit.setText("No Data"); }
 
     @FXML public void onLogExpenseClicked() { if (onNavigateToQuickEntry != null) onNavigateToQuickEntry.run(); }
     @FXML public void onHistoryClicked() { if (onNavigateToHistory != null) onNavigateToHistory.run(); }
