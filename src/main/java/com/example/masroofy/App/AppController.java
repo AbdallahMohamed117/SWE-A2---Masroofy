@@ -2,10 +2,13 @@ package com.example.masroofy.App;
 
 import com.example.masroofy.Controller.*;
 import com.example.masroofy.Model.*;
+import com.example.masroofy.Model.Entity.Transaction;
 import com.example.masroofy.View.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+
+import java.util.function.Consumer;
 
 public class AppController {
     private final AppModel model;
@@ -25,6 +28,7 @@ public class AppController {
     private Parent historyRoot;
     private HistoryView historyView;
     private HistoryController historyController;
+    private Transaction editTransaction;
 
     public AppController(Stage primaryStage) {
         appView = new AppView(primaryStage);
@@ -111,21 +115,34 @@ public class AppController {
     }
 
     private void showQuickEntry() {
-        if (quickEntryView == null) {
-            try {
+        try {
+            if (quickEntryView == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(Screen.QUICK_ENTRY.getFxmlPath()));
                 quickEntryRoot = loader.load();
                 quickEntryView = loader.getController();
+            }
+
+            if (editTransaction != null) {
+                History historyModel = model.getHistory();
+                new QuickEntryEditController(historyModel, quickEntryView, editTransaction, () -> {
+                    editTransaction = null;
+                    navigateTo(Screen.HISTORY);
+                });
+                quickEntryView.setOnNavigateBack(() -> {
+                    editTransaction = null;
+                    navigateTo(Screen.HISTORY);
+                });
+            } else {
                 QuickEntry quickEntryModel = model.getQuickEntry();
                 QuickEntryController qec = new QuickEntryController(quickEntryModel, quickEntryView);
                 qec.PrintView();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
+                quickEntryView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
             }
+
+            appView.switchTo(quickEntryRoot, Screen.QUICK_ENTRY);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        quickEntryView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
-        appView.switchTo(quickEntryRoot, Screen.QUICK_ENTRY);
     }
 
     private void showHistory() {
@@ -143,6 +160,10 @@ public class AppController {
         }
         historyController.refreshHistory();
         historyView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
+        historyView.setOnNavigateToEdit(transaction -> {
+            editTransaction = transaction;
+            navigateTo(Screen.QUICK_ENTRY);
+        });
         appView.switchTo(historyRoot, Screen.HISTORY);
     }
 }

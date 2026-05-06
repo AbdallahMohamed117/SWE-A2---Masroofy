@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class HistoryView implements AbstractView {
 
@@ -25,6 +26,8 @@ public class HistoryView implements AbstractView {
 
     private HistoryListener listener;
     private Runnable onNavigateBack;
+    private Consumer<Transaction> onNavigateToEdit;
+    public void setOnNavigateToEdit(Consumer<Transaction> callback) { this.onNavigateToEdit = callback; }
     public void setOnNavigateBack(Runnable r) { this.onNavigateBack = r; }
     public void setListener(HistoryListener l) {
         listener = l;
@@ -182,7 +185,9 @@ public class HistoryView implements AbstractView {
 
 
     public void showEditForm(Transaction transaction) {
-        if (listener != null) {
+        if (onNavigateToEdit != null) {
+            onNavigateToEdit.accept(transaction);
+        } else if (listener != null) {
             listener.onEditClicked(transaction);
         }
     }

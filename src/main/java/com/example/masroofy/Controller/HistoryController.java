@@ -5,8 +5,6 @@ import com.example.masroofy.Model.*;
 import com.example.masroofy.Model.Entity.Transaction;
 import com.example.masroofy.View.*;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -49,24 +47,6 @@ public class HistoryController implements AbstractController, HistoryListener {
 
     @Override
     public void onEditClicked(Transaction transaction) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/masroofy/View/QuickEntry.fxml"));
-            Parent quickEntryRoot = loader.load();
-            QuickEntryView qeView = loader.getController();
-
-            qeView.setOnNavigateBack(() -> {
-                PrintView();
-            });
-
-            Runnable onDone = () -> {
-                qeView.setOnNavigateBack(null);
-                PrintView();
-            };
-
-            new QuickEntryEditController(model, qeView, transaction, onDone);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
