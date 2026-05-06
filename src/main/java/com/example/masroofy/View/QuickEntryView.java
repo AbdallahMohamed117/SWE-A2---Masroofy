@@ -21,8 +21,20 @@ public class QuickEntryView implements AbstractView {
     @FXML private GridPane categoryGrid;
     @FXML private TextField newCategoryField;
 
+    private static final String[] CATEGORY_COLORS = {
+            "#ef4444", "#f97316", "#eab308", "#22c55e",
+            "#14b8a6", "#3b82f6", "#8b5cf6", "#ec4899",
+            "#06b6d4", "#84cc16", "#f43f5e", "#a855f7"
+    };
+    private static final String[] CATEGORY_COLORS_DARK = {
+            "#b91c1c", "#c2410c", "#a16207", "#15803d",
+            "#0f766e", "#1d4ed8", "#6d28d9", "#be185d",
+            "#0e7490", "#4d7c0f", "#be123c", "#7e22ce"
+    };
+
     private String selectedCategory = null;
     private VBox currentlySelectedTile = null;
+    private String currentlySelectedColor = null;
     private QuickEntryListener listener;
     private Runnable onNavigateBack;
 
@@ -55,8 +67,9 @@ public class QuickEntryView implements AbstractView {
         if (categoryGrid == null) return;
         categoryGrid.getChildren().clear();
         int col = 0, row = 0;
-        for (String catName : categories) {
-            VBox tile = buildCategoryTile(catName);
+        for (int i = 0; i < categories.size(); i++) {
+            String color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+            VBox tile = buildCategoryTile(categories.get(i), color);
             categoryGrid.add(tile, col, row);
             col++;
             if (col == 3) {
@@ -72,11 +85,11 @@ public class QuickEntryView implements AbstractView {
         showCategories(names);
     }
 
-    private VBox buildCategoryTile(String categoryName) {
+    private VBox buildCategoryTile(String categoryName, String color) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
         tile.setStyle(
-                "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
+                "-fx-background-color: " + color + "; -fx-padding: 12; " +
                         "-fx-background-radius: 12; -fx-cursor: hand;"
         );
 
@@ -84,10 +97,11 @@ public class QuickEntryView implements AbstractView {
         label.setFont(Font.font("System", 14));
         label.setWrapText(true);
         label.setAlignment(Pos.CENTER);
+        label.setTextFill(Color.WHITE);
 
         tile.getChildren().add(label);
 
-        tile.setOnMouseClicked(e -> selectCategory(categoryName, tile));
+        tile.setOnMouseClicked(e -> selectCategory(categoryName, tile, color));
         return tile;
     }
 
@@ -110,14 +124,6 @@ public class QuickEntryView implements AbstractView {
         currentlySelectedTile = tile;
     }
 
-    public void showUpdateConfirmation() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText("Transaction updated successfully!");
-        alert.showAndWait();
-    }
-
     private void selectCategoryByName(String categoryName) {
         if (categoryGrid == null) return;
         for (javafx.scene.Node node : categoryGrid.getChildren()) {
@@ -126,7 +132,12 @@ public class QuickEntryView implements AbstractView {
                 if (!tile.getChildren().isEmpty() && tile.getChildren().get(0) instanceof Label) {
                     Label label = (Label) tile.getChildren().get(0);
                     if (categoryName.equals(label.getText())) {
-                        selectCategory(categoryName, tile);
+                        String style = tile.getStyle();
+                        String color = "#3b82f6";
+                        int start = style.indexOf("-fx-background-color:") + 22;
+                        int end = style.indexOf(";", start);
+                        if (start > 21 && end > start) color = style.substring(start, end).trim();
+                        selectCategory(categoryName, tile, color);
                         return;
                     }
                 }
@@ -175,6 +186,14 @@ public class QuickEntryView implements AbstractView {
 
 
 
+
+    public void showUpdateConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Transaction updated successfully!");
+        alert.showAndWait();
+    }
 
 
     @FXML
