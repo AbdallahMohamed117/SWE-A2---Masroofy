@@ -26,8 +26,10 @@ public class HistoryController implements AbstractController, HistoryListener {
     @Override
     public void PrintView() {
         view.showTransactions(model.getTransactions());
+    }
 
-
+    public void refreshHistory(){
+        view.showTransactions(model.getTransactions());
     }
 
     @Override

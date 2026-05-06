@@ -97,6 +97,9 @@ public class HistoryView implements AbstractView {
 
         if (list == null || list.isEmpty()) {
             showEmptyState();
+            totalExpensesLabel.setText("EGP " + String.format("%.2f", 0.0));
+
+            transactionCountLabel.setText(String.valueOf(0));
             return;
         }
 

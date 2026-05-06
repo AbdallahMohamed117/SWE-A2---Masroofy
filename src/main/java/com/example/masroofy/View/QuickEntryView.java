@@ -85,6 +85,7 @@ public class QuickEntryView implements AbstractView {
         showCategories(names);
     }
 
+
     private VBox buildCategoryTile(String categoryName, String color) {
         VBox tile = new VBox(8);
         tile.setAlignment(Pos.CENTER);
@@ -105,23 +106,23 @@ public class QuickEntryView implements AbstractView {
         return tile;
     }
 
-    private void selectCategory(String categoryName, VBox tile) {
+    private void selectCategory(String categoryName, VBox tile, String color) {
         if (currentlySelectedTile != null) {
             currentlySelectedTile.setStyle(
-                    "-fx-background-color: #f3f4f6; -fx-padding: 12; " +
-                            "-fx-background-radius: 12; -fx-cursor: hand;"
+                    "-fx-background-color: " + currentlySelectedColor + "; -fx-padding: 12; " +
+                            "-fx-background-radius: 12; -fx-cursor: hand; -fx-opacity: 1.0;"
             );
-            ((Label) currentlySelectedTile.getChildren().get(0)).setTextFill(Color.BLACK);
         }
 
         tile.setStyle(
-                "-fx-background-color: #3b82f6; -fx-padding: 12; " +
-                        "-fx-background-radius: 12; -fx-cursor: hand;"
+                "-fx-background-color: " + color + "; -fx-padding: 12; " +
+                        "-fx-background-radius: 12; -fx-cursor: hand; " +
+                        "-fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 12; -fx-opacity: 0.85;"
         );
-        ((Label) tile.getChildren().get(0)).setTextFill(Color.WHITE);
 
         selectedCategory = categoryName;
         currentlySelectedTile = tile;
+        currentlySelectedColor = color;
     }
 
     private void selectCategoryByName(String categoryName) {

@@ -24,6 +24,7 @@ public class AppController {
     private QuickEntryView quickEntryView;
     private Parent historyRoot;
     private HistoryView historyView;
+    private HistoryController historyController;
 
     public AppController(Stage primaryStage) {
         appView = new AppView(primaryStage);
@@ -134,12 +135,13 @@ public class AppController {
                 historyRoot = loader.load();
                 historyView = loader.getController();
                 History historyModel = model.getHistory();
-                new HistoryController(historyModel, historyView);
+                historyController = new HistoryController(historyModel, historyView);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
         }
+        historyController.refreshHistory();
         historyView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
         appView.switchTo(historyRoot, Screen.HISTORY);
     }
