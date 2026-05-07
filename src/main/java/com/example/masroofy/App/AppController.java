@@ -8,8 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 
-import java.util.function.Consumer;
-
 /**
  * Main controller that orchestrates the entire application flow and screen navigation.
  * <p>
@@ -312,7 +310,7 @@ public class AppController {
                 // Add mode
                 QuickEntry quickEntryModel = model.getQuickEntry();
                 QuickEntryController qec = new QuickEntryController(quickEntryModel, quickEntryView);
-                qec.PrintView();
+                qec.printView();
                 quickEntryView.setOnNavigateBack(() -> navigateTo(Screen.DASHBOARD));
             }
 

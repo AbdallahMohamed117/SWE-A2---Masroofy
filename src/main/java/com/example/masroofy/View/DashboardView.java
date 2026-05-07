@@ -1,6 +1,5 @@
 package com.example.masroofy.View;
 
-import com.example.masroofy.Listener.DashboardListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -31,7 +30,6 @@ public class DashboardView implements AbstractView {
     @FXML private Label btnSettings;
     private VBox alertBanner;
 
-    private DashboardListener listener;
     private Runnable onNavigateToQuickEntry;
     private Runnable onNavigateToHistory;
     private Runnable onNavigateToSettings;
@@ -39,9 +37,6 @@ public class DashboardView implements AbstractView {
     private double totalSpent;
     private Map<String, Double> categoryData;
 
-    public void setListener(DashboardListener listener) {
-        this.listener = listener;
-    }
 
     public void setOnNavigateToQuickEntry(Runnable r) { this.onNavigateToQuickEntry = r; }
     public void setOnNavigateToHistory(Runnable r) { this.onNavigateToHistory = r; }
