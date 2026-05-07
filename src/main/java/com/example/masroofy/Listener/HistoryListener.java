@@ -65,17 +65,7 @@ public interface HistoryListener {
      */
     void onEditClicked(Transaction transaction);
 
-    /**
-     * Called when an edit operation is submitted.
-     * <p>
-     * This method is triggered when the user confirms changes to an edited
-     * transaction. The implementation should save the updated transaction data
-     * to the model and refresh the history view.
-     * </p>
-     *
-     * @param transaction the transaction with updated data
-     */
-    void onEditSubmitted(Transaction transaction);
+
 
     /**
      * Called when the delete button is clicked on a transaction.

@@ -143,7 +143,6 @@ public class HistoryController implements AbstractController, HistoryListener {
      */
     @Override
     public void onEditClicked(Transaction transaction) {
-        // TODO: Implement edit navigation
     }
 
     /**
@@ -155,10 +154,7 @@ public class HistoryController implements AbstractController, HistoryListener {
      *
      * @param transaction the edited transaction
      */
-    @Override
-    public void onEditSubmitted(Transaction transaction) {
-        // TODO: Implement edit submission logic
-    }
+
 
     /**
      * Handles delete button clicks for a transaction.
