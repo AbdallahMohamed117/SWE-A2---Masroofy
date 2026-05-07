@@ -155,7 +155,6 @@ public class SetupView implements AbstractView {
      * <p><b>Note:</b></p>
      * This method assumes that the allowance amount is a valid double.
      * No parsing error handling is currently implemented.
-     * </p>
      */
     @FXML
     public void onStartCycleClicked() {

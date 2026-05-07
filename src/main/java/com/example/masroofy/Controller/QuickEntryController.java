@@ -108,7 +108,6 @@ public class QuickEntryController implements AbstractController, QuickEntryListe
      *   <li>Attempts to add the transaction to the model</li>
      *   <li>Displays appropriate success or error messages</li>
      * </ol>
-     * </p>
      *
      * <p><b>Error Conditions:</b></p>
      * <ul>

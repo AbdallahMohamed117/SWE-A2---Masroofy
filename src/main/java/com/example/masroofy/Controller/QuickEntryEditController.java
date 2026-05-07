@@ -65,7 +65,6 @@ public class QuickEntryEditController implements QuickEntryListener {
      *   <li>Putting the view into edit mode with the existing transaction data</li>
      *   <li>Populating the category dropdown with available categories</li>
      * </ul>
-     * </p>
      *
      * @param model the history model used to update the transaction
      * @param view the Quick Entry view (will be put into edit mode)
@@ -102,7 +101,6 @@ public class QuickEntryEditController implements QuickEntryListener {
      *   <li>Attempts to save the updated transaction to the model</li>
      *   <li>Displays success message and navigates back on success, or error message on failure</li>
      * </ol>
-     * </p>
      *
      * <p><b>Error Conditions:</b></p>
      * <ul>

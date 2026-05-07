@@ -23,7 +23,7 @@ package com.example.masroofy.View;
  *   <li>{@link QuickEntryView} - Quick expense entry form</li>
  *   <li>{@link SetupView} - First-time budget setup screen</li>
  *   <li>{@link SettingsView} - Application settings and preferences</li>
- *   <li>{@link SplashView} - Launch splash screen (uses createRoot instead)</li>
+ *   <li>{@link com.example.masroofy.App.SplashView} - Launch splash screen (uses createRoot instead)</li>
  * </ul>
  *
  * <p><b>Usage Pattern:</b></p>

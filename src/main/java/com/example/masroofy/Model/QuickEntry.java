@@ -80,7 +80,6 @@ public class QuickEntry extends AbstractModel {
      *   <li>Updates the daily safe limit (decreases by transaction amount)</li>
      *   <li>Inserts the transaction record</li>
      * </ul>
-     * </p>
      *
      * <p><b>Transaction Safety:</b></p>
      * Uses database transactions with auto-commit disabled to ensure all

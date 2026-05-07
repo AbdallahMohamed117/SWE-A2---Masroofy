@@ -145,12 +145,11 @@ public class History extends AbstractModel {
      *   <li>Updating the daily safe limit if the transaction occurred today</li>
      *   <li>Ensuring the new amount does not exceed available allowance</li>
      * </ul>
-     * </p>
      *
      * <p><b>Allowance Adjustment Logic:</b></p>
      * <ul>
-     *   <li>If amount increases (delta > 0): Decrease allowance by delta</li>
-     *   <li>If amount decreases (delta < 0): Increase allowance by absolute delta</li>
+     *   <li>If amount increases (delta &gt; 0): Decrease allowance by delta</li>
+     *   <li>If amount decreases (delta &lt; 0): Increase allowance by absolute delta</li>
      *   <li>If delta exceeds available allowance: Transaction fails (rollback)</li>
      * </ul>
      *

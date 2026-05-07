@@ -50,7 +50,6 @@ public class HistoryController implements AbstractController, HistoryListener {
      *   <li>Setting predefined date filter options (Last Day, Last Week, Last Month)</li>
      *   <li>Refreshing the history display</li>
      * </ul>
-     * </p>
      *
      * @param m the history model containing transaction data
      * @param v the history view for UI display

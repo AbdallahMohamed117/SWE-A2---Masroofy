@@ -93,7 +93,6 @@ public class DashboardController implements AbstractController {
      *   <li>Updates all UI components with calculated values</li>
      *   <li>Shows or hides alerts based on limit status</li>
      * </ol>
-     * </p>
      *
      * <p><b>Pie Chart Calculation:</b></p>
      * Each transaction's percentage is calculated as:
