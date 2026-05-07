@@ -11,15 +11,90 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Model class for managing transaction history in the Masroofy application.
+ * <p>
+ * The {@code History} class provides comprehensive database operations for
+ * retrieving, editing, and deleting financial transactions. It supports
+ * filtering by category and date range, transaction editing with allowance
+ * adjustment, and transaction deletion with budget recalculation.
+ * </p>
+ *
+ * <p><b>Key Responsibilities:</b></p>
+ * <ul>
+ *   <li>Retrieving all transactions with optional category and date filters</li>
+ *   <li>Editing existing transactions with automatic allowance and daily limit updates</li>
+ *   <li>Deleting transactions with budget readjustment</li>
+ *   <li>Fetching available category names for filtering</li>
+ * </ul>
+ *
+ * <p><b>Database Tables Used:</b></p>
+ * <ul>
+ *   <li>{@code Transactions} - Stores transaction amounts and timestamps</li>
+ *   <li>{@code Category} - Stores category names and IDs</li>
+ *   <li>{@code Budget} - Stores allowance and daily limits for adjustment</li>
+ * </ul>
+ *
+ * <p><b>Transaction Editing Logic:</b></p>
+ * <ul>
+ *   <li>Increases allowance when a transaction amount is decreased</li>
+ *   <li>Decreases allowance when a transaction amount is increased (subject to availability)</li>
+ *   <li>Updates daily safe limit if the transaction occurred today</li>
+ * </ul>
+ *
+ * @version 1.0
+ * @since 1.0
+ * @see AbstractModel
+ * @see Transaction
+ * @see Category
+ * @see DateUtil
+ * @see com.example.masroofy.Controller.HistoryController
+ */
 public class History extends AbstractModel {
+
+    /**
+     * Constructs a History model instance.
+     * <p>
+     * Initializes the database connection through the parent {@link AbstractModel}
+     * constructor.
+     * </p>
+     */
     public History() {
         super();
     }
 
+    /**
+     * Retrieves all transactions without any filtering.
+     * <p>
+     * This is a convenience method that calls {@link #getTransactions(String, Date, Date)}
+     * with all parameters set to {@code null}.
+     * </p>
+     *
+     * @return a {@link List} of all {@link Transaction} objects
+     */
     public List<Transaction> getTransactions() {
         return getTransactions(null, null, null);
     }
 
+    /**
+     * Retrieves transactions filtered by category and/or date range.
+     * <p>
+     * This method builds a dynamic SQL query based on which filter parameters
+     * are provided. Only non-null parameters are applied as filters.
+     * </p>
+     *
+     * <p><b>Filter Behavior:</b></p>
+     * <ul>
+     *   <li>If {@code category} is {@code null}, all categories are included</li>
+     *   <li>If {@code from} is {@code null}, no lower date bound is applied</li>
+     *   <li>If {@code to} is {@code null}, no upper date bound is applied</li>
+     * </ul>
+     *
+     * @param category the category name to filter by, or {@code null} for all categories
+     * @param from the start date for filtering, or {@code null} for no lower bound
+     * @param to the end date for filtering, or {@code null} for no upper bound
+     * @return a {@link List} of {@link Transaction} objects matching the filters
+     */
     public List<Transaction> getTransactions(String category, Date from, Date to) {
 
         StringBuilder query = new StringBuilder(
@@ -60,6 +135,35 @@ public class History extends AbstractModel {
         return transactions;
     }
 
+    /**
+     * Edits an existing transaction with allowance and daily limit adjustments.
+     * <p>
+     * This method performs a comprehensive update of a transaction, including:
+     * <ul>
+     *   <li>Calculating the difference between old and new amounts</li>
+     *   <li>Adjusting the budget allowance accordingly</li>
+     *   <li>Updating the daily safe limit if the transaction occurred today</li>
+     *   <li>Ensuring the new amount does not exceed available allowance</li>
+     * </ul>
+     * </p>
+     *
+     * <p><b>Allowance Adjustment Logic:</b></p>
+     * <ul>
+     *   <li>If amount increases (delta > 0): Decrease allowance by delta</li>
+     *   <li>If amount decreases (delta < 0): Increase allowance by absolute delta</li>
+     *   <li>If delta exceeds available allowance: Transaction fails (rollback)</li>
+     * </ul>
+     *
+     * <p><b>Transaction Properties:</b></p>
+     * <ul>
+     *   <li>Uses database transactions with auto-commit disabled</li>
+     *   <li>Rolls back all changes if any operation fails</li>
+     *   <li>Validates that new amount is positive (> 0)</li>
+     * </ul>
+     *
+     * @param transaction the transaction with updated values (timestamp identifies the original)
+     * @return {@code true} if the edit was successful, {@code false} otherwise
+     */
     public boolean editTransaction(Transaction transaction) {
         String getOldTransactionQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
         String getAllowanceQuery = "SELECT allowance FROM Budget";
@@ -71,6 +175,7 @@ public class History extends AbstractModel {
         try {
             connection.setAutoCommit(false);
 
+            // Get the original transaction amount
             double oldAmount = 0;
             try (PreparedStatement getOldStmt = connection.prepareStatement(getOldTransactionQuery)) {
                 getOldStmt.setLong(1, transaction.getTransactionTimestamp());
@@ -93,7 +198,9 @@ public class History extends AbstractModel {
 
             double delta = newAmount - oldAmount;
 
+            // Adjust allowance based on amount change
             if (delta > 0) {
+                // Check if enough allowance is available
                 double currentAllowance = 0;
                 try (PreparedStatement getAllowanceStmt = connection.prepareStatement(getAllowanceQuery)) {
                     ResultSet allowanceRs = getAllowanceStmt.executeQuery();
@@ -122,6 +229,7 @@ public class History extends AbstractModel {
                 }
             }
 
+            // Adjust daily safe limit if transaction occurred today
             if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
                 String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
                 try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
@@ -130,6 +238,7 @@ public class History extends AbstractModel {
                 }
             }
 
+            // Get category ID for the new category
             int categoryId = -1;
             try (PreparedStatement categoryIdStatement = connection.prepareStatement(categoryIdQuery)) {
                 categoryIdStatement.setString(1, transaction.getTransactionCategory().getCategoryName());
@@ -144,6 +253,7 @@ public class History extends AbstractModel {
                 return false;
             }
 
+            // Update the transaction
             try (PreparedStatement updateTransactionStatement = connection.prepareStatement(updateTransactionQuery)) {
                 updateTransactionStatement.setDouble(1, newAmount);
                 updateTransactionStatement.setInt   (2, categoryId);
@@ -166,6 +276,30 @@ public class History extends AbstractModel {
         return false;
     }
 
+    /**
+     * Deletes a transaction and adjusts the budget accordingly.
+     * <p>
+     * This method removes a transaction from the database and adds the
+     * transaction amount back to the budget allowance. If the transaction
+     * occurred today, the daily safe limit is also increased by the transaction
+     * amount.
+     * </p>
+     *
+     * <p><b>Delete Operations:</b></p>
+     * <ul>
+     *   <li>Retrieves the transaction amount before deletion</li>
+     *   <li>Adds the amount back to the budget allowance</li>
+     *   <li>If transaction occurred today, increases daily safe limit by the amount</li>
+     *   <li>Deletes the transaction record from the database</li>
+     * </ul>
+     *
+     * <p><b>Transaction Safety:</b></p>
+     * Uses database transactions with auto-commit disabled to ensure all
+     * operations succeed or fail together. Rolls back if any operation fails.
+     *
+     * @param transaction the transaction to be deleted
+     * @return {@code true} if the deletion was successful, {@code false} otherwise
+     */
     public boolean deleteTransaction(Transaction transaction) {
         String getTransactionAmountQuery = "SELECT transaction_amount FROM Transactions WHERE transaction_timestamp = ?";
         String deleteTransactionQuery = "DELETE FROM Transactions WHERE transaction_timestamp = ?";
@@ -174,6 +308,7 @@ public class History extends AbstractModel {
         try {
             connection.setAutoCommit(false);
 
+            // Get the transaction amount before deletion
             double amount = 0;
             try (PreparedStatement getAmountStmt = connection.prepareStatement(getTransactionAmountQuery)) {
                 getAmountStmt.setLong(1, transaction.getTransactionTimestamp());
@@ -187,11 +322,13 @@ public class History extends AbstractModel {
                 }
             }
 
+            // Add the amount back to allowance
             try (PreparedStatement addAllowanceStmt = connection.prepareStatement(addAllowanceQuery)) {
                 addAllowanceStmt.setDouble(1, amount);
                 addAllowanceStmt.executeUpdate();
             }
 
+            // Adjust daily safe limit if transaction occurred today
             if (DateUtil.isToday(transaction.getTransactionTimestamp())) {
                 String adjustDailyLimitQuery = "UPDATE Budget SET daily_safe_limit = daily_safe_limit + ?";
                 try (PreparedStatement adjustDailyLimitStmt = connection.prepareStatement(adjustDailyLimitQuery)) {
@@ -200,6 +337,7 @@ public class History extends AbstractModel {
                 }
             }
 
+            // Delete the transaction
             try (PreparedStatement deleteTransactionStatement = connection.prepareStatement(deleteTransactionQuery)) {
                 deleteTransactionStatement.setLong(1, transaction.getTransactionTimestamp());
                 int rows = deleteTransactionStatement.executeUpdate();
@@ -220,6 +358,15 @@ public class History extends AbstractModel {
         return false;
     }
 
+    /**
+     * Retrieves all available category names from the database.
+     * <p>
+     * This method fetches the list of category names used for filtering
+     * transactions in the History screen.
+     * </p>
+     *
+     * @return a {@link List} of category name strings
+     */
     public List<String> getCategories() {
         String getCategoriesQuery = "SELECT category_name FROM Category";
         List<String> categories = new ArrayList<>();
